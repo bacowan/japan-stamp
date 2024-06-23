@@ -18,11 +18,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* TODO: make this only appear in the pages that use it (it doesn't seem to work with the Head component) */}
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossOrigin=""/>
+      </head>
       <body className={inter.className}>
         <GlobalStyles/>
         <StyledComponentsRegistry>
-          <Navbar/>
-          {children}
+          <div style={{
+            "display": "flex",
+            "flexDirection": "column",
+            "height": "100vh"
+          }}>
+            <Navbar/>
+            {children}
+          </div>
         </StyledComponentsRegistry>
       </body>
     </html>
