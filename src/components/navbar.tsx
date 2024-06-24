@@ -49,7 +49,7 @@ const StyledHeader = styled.div`
     overflow: hidden;
     background-color: #f1f1f1;
     padding: 10px;
-    flex: 0 1 auto;
+    flex: 0 0 auto;
 `
 
 export default function Navbar() {
