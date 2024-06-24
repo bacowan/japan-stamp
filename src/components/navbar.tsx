@@ -3,7 +3,7 @@
 import styled from "styled-components"
 import { small, medium, large } from "../lib/breakpoints";
 
-const StyledLink = styled.a<{ isActive?: boolean; }>`
+const StyledLink = styled.a<{ $isActive?: boolean; }>`
     float: left;
     color: black;
     text-align: center;
@@ -12,8 +12,8 @@ const StyledLink = styled.a<{ isActive?: boolean; }>`
     font-size: 18px; 
     line-height: 25px;
     border-radius: 4px;
-    background-color: ${ props => props.isActive ? "dodgerblue" : "" };
-    color: ${ props => props.isActive ? "white" : "" };
+    background-color: ${ props => props.$isActive ? "dodgerblue" : "" };
+    color: ${ props => props.$isActive ? "white" : "" };
     ${ small(`
         float: none;
         display: block;
@@ -21,7 +21,7 @@ const StyledLink = styled.a<{ isActive?: boolean; }>`
     `) }
 `;
 
-const StyledRightLink = styled(StyledLink)<{ isActive?: boolean; }>`
+const StyledRightLink = styled(StyledLink)`
     ${ small(`
         float: none;
         display: block;
@@ -56,10 +56,10 @@ export default function Navbar() {
     return <StyledHeader>
             <StyledLogo>CompanyLogo</StyledLogo>
             <StyledRightDiv>
-                <StyledRightLink isActive={true} href="#home">Map</StyledRightLink>
-                <StyledRightLink href="#home">List</StyledRightLink>
-                <StyledRightLink href="#about">Contribute</StyledRightLink>
+                <StyledRightLink $isActive={true} href="#home">Map</StyledRightLink>
+                <StyledRightLink href="#list">List</StyledRightLink>
                 <StyledRightLink href="#about">About</StyledRightLink>
+                <StyledRightLink href="#login">Login</StyledRightLink>
             </StyledRightDiv>
         </StyledHeader>
 }
