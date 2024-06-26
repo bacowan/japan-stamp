@@ -54,7 +54,7 @@ const StyledHeader = styled.div`
 
 export default function Navbar() {
     return <StyledHeader>
-            <StyledLogo>CompanyLogo</StyledLogo>
+            <StyledLogo>Japan Stamp</StyledLogo>
             <StyledRightDiv>
                 <StyledRightLink $isActive={true} href="#home">Map</StyledRightLink>
                 <StyledRightLink href="#list">List</StyledRightLink>

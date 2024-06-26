@@ -3,7 +3,7 @@
 import Head from "next/head";
 import Script from "next/script";
 import styled from "styled-components";
-import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
+import { Circle, FeatureGroup, LayerGroup, LayersControl, MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
 import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { Metadata } from "next";
@@ -12,6 +12,8 @@ import L from 'leaflet';
 import { renderToString } from "react-dom/server";
 import { PrefectureLocations } from "@/lib/constant-data";
 import StampMapPopup from "@/components/stamp-map-popup";
+import MapFilter from "@/components/map-filter";
+//import { main } from "@/lib/database-access";
 
 const defaultZoom = 5;
 const zoomCutoff = 11;
@@ -30,17 +32,6 @@ const NumberedCircle = styled.div`
   border: 2px solid white; // Optional: to make the circle more visible
 `
 
-const StyledFilter = styled(FaFilter)`
-  position: absolute;
-  top: 1em;
-  right: 1em;
-  z-index: 1;
-`
-
-function Filter() {
-  return <StyledFilter/>
-}
-
 interface MapEventListenerProps {
   zoomLevel: number,
   setZoomLevel: (zoomLevel: number) => void
@@ -51,7 +42,10 @@ function MapEventListener({zoomLevel, setZoomLevel}: MapEventListenerProps) {
     zoomend: () => {
         setZoomLevel(mapEvents.getZoom());
     },
-    popupopen: (e) => {
+    overlayadd: (e) => {
+      console.log(e);
+    },
+    overlayremove: (e) => {
       console.log(e);
     }
   });
@@ -64,12 +58,25 @@ function LoadPrefectureData() {
 }
 
 export default function Home() {
+  /*useEffect(() => {
+    (async function() {
+      const test = await main();
+      console.log(test);
+    })();
+  }, []);*/
+
+
   const [zoomLevel, setZoomLevel] = useState(defaultZoom);
+  const [checkedLayers, setCheckedLayers] = useState({
+    "Train Station": true,
+    "Roadside Station": true,
+    "Shrine": true,
+    "Sightseeing Spot": true
+  });
   const [lastClickedMarkerKey, setLastClickedMarkerKey] = useState<null|number|string>(null);
   // TODO: show number markers at a certain size, and the individual pins at another
   // TODO: Load data server side. Also compress/decompress it with gzip and reducing field names.
   const [prefectureData, setPrefectureData] = useState([]);
-
 
   let markers: JSX.Element[];
   if (zoomLevel >= zoomCutoff) {
@@ -99,6 +106,14 @@ export default function Home() {
     })
   }
 
+  const layers = Object.keys(checkedLayers).map(l => {
+    <LayersControl.Overlay checked={true} name={l}>
+      <LayerGroup>
+        {markers}
+      </LayerGroup>
+    </LayersControl.Overlay>
+  });
+
   return (
     <>
     <main
@@ -109,7 +124,6 @@ export default function Home() {
       <Script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossOrigin=""></Script>
-      <Filter/>
       <MapContainer
         center={[35.6764, 139.6500]}
         zoom={defaultZoom}
@@ -121,9 +135,14 @@ export default function Home() {
         <MapEventListener zoomLevel={zoomLevel} setZoomLevel={setZoomLevel}/>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        {markers}
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
+        <LayersControl position="topright">
+          <LayersControl.Overlay checked={true} name="Marker with popup">
+            <LayerGroup>
+              {markers}
+            </LayerGroup>
+          </LayersControl.Overlay>
+        </LayersControl>
       </MapContainer>
     </main>
     </>
