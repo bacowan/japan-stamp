@@ -1,7 +1,7 @@
 'use client';
 
 import styled from "styled-components"
-import { small, medium, large } from "../lib/breakpoints";
+import { small, medium, large } from "../utils/breakpoints";
 
 const StyledLink = styled.a<{ $isActive?: boolean; }>`
     float: left;

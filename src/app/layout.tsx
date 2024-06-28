@@ -4,6 +4,7 @@ import StyledComponentsRegistry from '../lib/registry'
 import GlobalStyles from "./styles/global-styles";
 import Navbar from "@/components/navbar";
 
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

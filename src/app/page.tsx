@@ -10,7 +10,7 @@ import { Metadata } from "next";
 import { FaFilter } from "react-icons/fa";
 import L from 'leaflet';
 import { renderToString } from "react-dom/server";
-import { PrefectureLocations } from "@/lib/constant-data";
+import { PrefectureLocations } from "@/utils/constant-data";
 import StampMapPopup from "@/components/stamp-map-popup";
 import MapFilter from "@/components/map-filter";
 //import { main } from "@/lib/database-access";
@@ -58,12 +58,6 @@ function LoadPrefectureData() {
 }
 
 export default function Home() {
-  /*useEffect(() => {
-    (async function() {
-      const test = await main();
-      console.log(test);
-    })();
-  }, []);*/
 
 
   const [zoomLevel, setZoomLevel] = useState(defaultZoom);
