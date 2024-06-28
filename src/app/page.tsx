@@ -1,19 +1,13 @@
 'use client';
 
-import Head from "next/head";
 import Script from "next/script";
 import styled from "styled-components";
 import { Circle, FeatureGroup, LayerGroup, LayersControl, MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
 import { useEffect, useMemo, useState } from "react";
-import dynamic from "next/dynamic";
-import { Metadata } from "next";
-import { FaFilter } from "react-icons/fa";
 import L from 'leaflet';
 import { renderToString } from "react-dom/server";
 import { PrefectureLocations } from "@/utils/constant-data";
 import StampMapPopup from "@/components/stamp-map-popup";
-import MapFilter from "@/components/map-filter";
-//import { main } from "@/lib/database-access";
 
 const defaultZoom = 5;
 const zoomCutoff = 11;

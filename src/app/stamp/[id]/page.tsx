@@ -1,11 +1,4 @@
-import { LatLngExpression } from 'leaflet';
-import Image from 'next/image';
 import Script from 'next/script';
-import { MapContainer, Marker, TileLayer } from 'react-leaflet';
-import styled from 'styled-components';
-
-import { cookies } from 'next/headers';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import PageClient from './page-client';
 
 async function getData(): Promise<TodoResponse[]> {
