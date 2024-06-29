@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
 import Image from 'next/image';
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const Popup = dynamic(() => import('react-leaflet').then((module) => module.Popup), { ssr: false });
 
 interface StampMapPopupProps {
     isOpen: boolean,

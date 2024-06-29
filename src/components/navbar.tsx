@@ -1,66 +1,27 @@
-'use client';
+import { PropsWithChildren } from "react";
 
-import styled from "styled-components"
-import { small, medium, large } from "../utils/breakpoints";
-
-const StyledLink = styled.a<{ $isActive?: boolean; }>`
-    float: left;
-    color: black;
-    text-align: center;
-    padding: 12px;
-    text-decoration: none;
-    font-size: 18px; 
-    line-height: 25px;
-    border-radius: 4px;
-    background-color: ${ props => props.$isActive ? "dodgerblue" : "" };
-    color: ${ props => props.$isActive ? "white" : "" };
-    ${ small(`
-        float: none;
-        display: block;
-        text-align: left;
-    `) }
-`;
-
-const StyledRightLink = styled(StyledLink)`
-    ${ small(`
-        float: none;
-        display: block;
-        text-align: left;
-    `) }
-`;
-
-const StyledRightDiv = styled.div`
-    float: right;
-    ${ small(`
-        float: none;
-    `) }
-`
-
-const StyledLogo = styled(StyledLink)`
-    font-size: 25px;
-    font-weight: bold;
-    ${ small(`
-        float: none;
-        display: block;
-        text-align: left;
-    `) }
-`
-const StyledHeader = styled.div`
-    overflow: hidden;
-    background-color: #f1f1f1;
-    padding: 10px;
-    flex: 0 0 auto;
-`
+function StyledLink({ children, isActive = false, href }: PropsWithChildren<{ isActive?: boolean, href: string }>) {
+    let className = "float-none text-left p-3 no-underline text-lg rounded block sm:float-left sm:text-center";
+    if (isActive) {
+        className += " bg-blue-600 text-white"
+    }
+    else {
+        className += " text-black"
+    }
+    return <a href={href} className={className}>
+        {children}
+    </a>
+}
 
 export default function Navbar() {
-    return <StyledHeader>
-            <StyledLogo>Japan Stamp</StyledLogo>
-            <StyledRightDiv>
-                <StyledRightLink $isActive={true} href="#home">Map</StyledRightLink>
-                <StyledRightLink href="#list">List</StyledRightLink>
-                <StyledRightLink href="#about">About</StyledRightLink>
-                <StyledRightLink href="#login">Login</StyledRightLink>
-            </StyledRightDiv>
-        </StyledHeader>
+    return <div className="overflow-hidden bg-[#f1f1f1] p-2.5 grow-0 shrink-0 basis-[auto]">
+            <StyledLink href="">Japan Stamp</StyledLink>
+            <div className="float-none sm:float-right">
+                <StyledLink isActive={true} href="#home">Map</StyledLink>
+                <StyledLink href="#list">List</StyledLink>
+                <StyledLink href="#about">About</StyledLink>
+                <StyledLink href="#login">Login</StyledLink>
+            </div>
+        </div>
 }
 

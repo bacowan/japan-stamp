@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import StyledComponentsRegistry from '../lib/registry'
-import GlobalStyles from "./styles/global-styles";
 import Navbar from "@/components/navbar";
+import '@/app/ui/global.css';
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -20,23 +19,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
         {/* TODO: make this only appear in the pages that use it (it doesn't seem to work with the Head component) */}
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
           crossOrigin=""/>
       </head>
       <body className={inter.className}>
-        <GlobalStyles/>
-        <StyledComponentsRegistry>
-          <div style={{
-            "display": "flex",
-            "flexDirection": "column",
-            "height": "100vh"
-          }}>
-            <Navbar/>
-            {children}
-          </div>
-        </StyledComponentsRegistry>
+        <div style={{
+          "display": "flex",
+          "flexDirection": "column",
+          "height": "100vh"
+        }}>
+          <Navbar/>
+          {children}
+        </div>
       </body>
     </html>
   );

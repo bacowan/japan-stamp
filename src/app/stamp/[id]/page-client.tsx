@@ -1,28 +1,10 @@
 'use client'
 
 import { LatLngExpression } from "leaflet"
-import styled from "styled-components"
 import Image from 'next/image';
+import dynamic from "next/dynamic";
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
 
-const StyledH1 = styled.h1`
-  text-align: center;
-`
-
-const StyledH2 = styled.h2`
-  text-align: center;
-`
-
-const StyledEdit = styled.sup`
-    font-size: 0.5em;
-`
-
-const StyledImage = styled(Image)`
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
-`
 export type TodoResponse = {
   content: string | null;
   isDone: boolean | null;
@@ -38,35 +20,44 @@ export interface StampPageClientParams {
 
   
 export default function PageClient({id, todos}: StampPageClientParams) {
-    const name = "Test stamp";
-    const imageUrl = "https://leafletjs.com/docs/images/logo.png";
-    const description = "stuff";
-    const location: LatLngExpression = [35.6764, 139.6500];
+  const name = "Test stamp";
+  const imageUrl = "https://leafletjs.com/docs/images/logo.png";
+  const description = "stuff";
+  const location: LatLngExpression = [35.6764, 139.6500];
 
-    console.log(todos);
-
-    return <>
-        <StyledH1><span>{name}</span><StyledEdit><a href="">Edit</a></StyledEdit></StyledH1>
-        <StyledImage src={imageUrl} alt="hi" height={100} width={100}></StyledImage>
-        <StyledH2>Location</StyledH2>
-        <MapContainer
-            center={location}
-            scrollWheelZoom={true}
-            zoom={15}
-            style={{
-                "display": "block",
-                "marginLeft": "auto",
-                "marginRight": "auto",
-                "width": "80%",
-                "maxWidth": "30em",
-                "maxHeight": "30em"
-            }}>
-            <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
-            <Marker position={location}></Marker>
-        </MapContainer>
-        <StyledH2>Description</StyledH2>
-        <p>{description}</p>
-    </>
+  return <>
+      <h1 className="text-center">
+        <span>{name}</span>
+        <sup className="text-xs">
+          <a href="">Edit</a>
+        </sup>
+      </h1>
+      <Image className="block mx-auto w-1/2"
+        src={imageUrl} alt="hi" height={100} width={100}></Image>
+      <h2 className="text-center">
+        Location
+      </h2>
+      <MapContainer
+          center={location}
+          scrollWheelZoom={true}
+          zoom={15}
+          style={{
+              "display": "block",
+              "marginLeft": "auto",
+              "marginRight": "auto",
+              "width": "80%",
+              "aspectRatio": "1/1",
+              "maxWidth": "30em",
+              "maxHeight": "30em"
+          }}>
+          <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
+          <Marker position={location}></Marker>
+      </MapContainer>
+      <h2 className="text-center">
+        Description
+      </h2>
+      <p>{description}</p>
+  </>
 }
