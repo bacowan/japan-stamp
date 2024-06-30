@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@vercel/postgres": "^0.9.0",
+    "firebase": "^10.12.2",
+    "firebaseui": "^6.1.0",
     "leaflet": "^1.9.4",
     "leaflet-defaulticon-compatibility": "^0.1.2",
     "next": "^14.2.4",
