@@ -3,7 +3,10 @@
 import { LatLngExpression } from "leaflet"
 import Image from 'next/image';
 import dynamic from "next/dynamic";
-import { MapContainer, Marker, TileLayer } from "react-leaflet";
+
+const MapContainer = dynamic(() => import('react-leaflet').then((module) => module.MapContainer), { ssr: false });
+const Marker = dynamic(() => import('react-leaflet').then((module) => module.Marker), { ssr: false });
+const TileLayer = dynamic(() => import('react-leaflet').then((module) => module.TileLayer), { ssr: false });
 
 export type TodoResponse = {
   content: string | null;

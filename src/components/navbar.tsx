@@ -1,12 +1,12 @@
 'use client'
 
 import auth from '../utils/firebase-init';
-import { MouseEventHandler, MutableRefObject, PropsWithChildren, RefObject, useEffect, useRef, useState } from "react";
-import {usePathname, useRouter} from 'next/navigation';
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { MouseEventHandler, MutableRefObject, PropsWithChildren, useEffect, useState } from "react";
+import { usePathname } from 'next/navigation';
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { FaUserCircle } from "react-icons/fa";
 import { IconContext } from "react-icons";
-import useOutsideAlerter from '@/utils/useOutsideAlerter';
+import useSignedIn from '@/utils/use-signed-in';
 
 interface StyledLinkProps {
     ref?: MutableRefObject<null>,
@@ -18,10 +18,10 @@ interface StyledLinkProps {
 function StyledLink({ children, isActive = false, href = "", onClick, ref }: PropsWithChildren<StyledLinkProps>) {
     let className = "float-none text-left p-3 no-underline text-lg rounded block sm:float-left sm:text-center";
     if (isActive) {
-        className += " bg-blue-600 text-white"
+        className += " bg-blue-600 text-white hover:bg-blue-700"
     }
     else {
-        className += " text-black"
+        className += " text-black hover:bg-slate-400"
     }
     return <a href={href} className={className} onClick={onClick} ref={ref}>
         {children}
@@ -29,22 +29,9 @@ function StyledLink({ children, isActive = false, href = "", onClick, ref }: Pro
 }
 
 export default function Navbar() {
-    const [isSignedIn, setIsSignedIn] = useState<boolean | null>(null);
     const [isUserMenuShown, setIsUserMenuShown] = useState(false);
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                setIsSignedIn(true);
-            }
-            else {
-                setIsSignedIn(false);
-            }
-        });
-        return unsubscribe;
-    })
-
-
+    const isSignedIn = useSignedIn();
     const pathname = usePathname();
 
     function onUserLinkClick(e: React.MouseEvent<HTMLElement>) {
@@ -55,13 +42,11 @@ export default function Navbar() {
     let userMenu: JSX.Element;
     if (isUserMenuShown) {
         userMenu = <div className="absolute top-full right-0 z-50 flex flex-col bg-[#f1f1f1] float-none w-full sm:float-right sm:text-center sm:w-auto">
-            <a href="/contribute" className='p-2.5 block'>
-                Contribute
-            </a>
             <a onClick={e => {
                 signOut(auth);
+                setIsUserMenuShown(false);
                 e.preventDefault();
-            }} className='cursor-pointer p-2.5 block'>
+            }} className='cursor-pointer p-2.5 block hover:bg-slate-400'>
                 Log Out
             </a>
         </div>
@@ -91,6 +76,7 @@ export default function Navbar() {
             <div className="float-none sm:float-right">
                 <StyledLink isActive={pathname === "/"} href="/">Map</StyledLink>
                 <StyledLink isActive={pathname === "/list"} href="list">List</StyledLink>
+                <StyledLink isActive={pathname === "/add-stamp"} href="add-stamp">Add Stamp</StyledLink>
                 <StyledLink isActive={pathname === "/about"} href="about">About</StyledLink>
                 {userLink}
             </div>

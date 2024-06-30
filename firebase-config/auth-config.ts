@@ -4,9 +4,11 @@ const authConfig = {
     signInOptions: [
         {
             provider: EmailAuthProvider.PROVIDER_ID,
-            
+            requireDisplayName: false
         }
     ],
-    signInSuccessUrl: '/'
+    callbacks:{
+        signInSuccessWithAuthResult: () => false,
+    }
 }
 export default authConfig;
