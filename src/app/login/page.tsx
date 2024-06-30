@@ -1,18 +1,10 @@
 'use client'
 
 // Import the functions you need from the SDKs you need
-import firebaseConfig from "../../../firebase-config";
-import { getAuth, connectAuthEmulator } from "firebase/auth";
+import auth from '../../utils/firebase-init';
 import { useEffect } from "react";
 import authConfig from "../../../firebase-config/auth-config";
-import firebase from 'firebase/compat/app';
 import 'firebaseui/dist/firebaseui.css'
-
-// Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-connectAuthEmulator(auth, "http://127.0.0.1:9099"); // TODO: Disable this with environment variables if not using the emulator
 
 export default function Login() {
     useEffect(() => {
