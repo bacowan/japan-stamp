@@ -7,20 +7,54 @@ import StampMapPopup from "@/components/stamp-map-popup";
 import L from "leaflet";
 import dynamic from "next/dynamic";
 import PageClient from "./page-client";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
+async function LoadPrefectureData(): Promise<{[name: string]: number}> {
+  const response = await fetch(
+    process.env.API_URL + 'prefecture-stamps',
+    { cache: 'no-cache' }); // TODO: Add caching
 
-function LoadPrefectureData() {
-
+  if (response.ok) {
+    const asJson = await response.json();
+    console.log(asJson);
+    
+    if (Array.isArray(asJson)) {
+      const ret: {[name: string]: number} = {};
+      for (let i = 0; i < asJson.length; i++) {
+        if ("name" in asJson[i] && "count" in asJson[i]) {
+          ret[asJson[i].name] = asJson[i].count;
+        }
+        else {
+          // TODO: Error handling
+          console.log("missing fields");
+          return {};
+        }
+      }
+      return ret;
+    }
+    else {
+      // TODO: Error handling
+    console.log("not array");
+      return {};
+    }
+  } else { 
+    // TODO: Error handling
+    console.log("response not okay");
+    return {};
+  } 
 }
 
 
-export default async function Home() {
+export default async function Home(request: NextRequest) {
+  const prefectureData = await LoadPrefectureData();
+
   const markers = PrefectureLocations.map(l => ({
     id: l.id,
     name: l.name,
     lat: l.lat,
     lon: l.lon,
-    count: l.id
+    count: l.name in prefectureData ? prefectureData[l.name] : 0
   }));
 
   return <PageClient markers={markers}/>
