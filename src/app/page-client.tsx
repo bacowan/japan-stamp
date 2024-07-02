@@ -3,8 +3,9 @@
 import StampMapPopup from "@/components/stamp-map-popup";
 import dynamic from "next/dynamic";
 import Script from "next/script";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMapEvents } from "react-leaflet";
+import Stamp, { toStampArray } from "./api-response-types/stamp";
 
 const MapContainer = dynamic(() => import('react-leaflet').then((module) => module.MapContainer), { ssr: false });
 const Marker = dynamic(() => import('react-leaflet').then((module) => module.Marker), { ssr: false });
@@ -19,22 +20,21 @@ const PrefectureMarker = dynamic(() => import('../components/prefecture-marker')
 
 const defaultZoom = 5;
 const zoomCutoff = 11;
+const defaultCenter: {lat: number, lon: number} = { lat: 35.6764, lon: 139.6500 };
 
 interface MapEventListenerProps {
-  zoomLevel: number,
-  setZoomLevel: (zoomLevel: number) => void
+  setZoomLevel: (zoomLevel: number) => void,
+  setLocation: (location: {lat: number, lon: number}) => void
 }
 
-function MapEventListener({zoomLevel, setZoomLevel}: MapEventListenerProps) {
+function MapEventListener({setZoomLevel, setLocation}: MapEventListenerProps) {
   const mapEvents = useMapEvents({
     zoomend: () => {
-        setZoomLevel(mapEvents.getZoom());
+      setZoomLevel(mapEvents.getZoom());
     },
-    overlayadd: (e) => {
-      console.log(e);
-    },
-    overlayremove: (e) => {
-      console.log(e);
+    moveend: () => {
+      const center = mapEvents.getCenter()
+      setLocation({lat: center.lat, lon: center.lng});
     }
   });
 
@@ -51,12 +51,54 @@ export interface HomePageClientParams {
     }[]
 }
 
+const stampCache = new Map<string, Stamp[]>();
+async function getStamps(lat: number, lon: number): Promise<Stamp[]> {
+  const latMin = Math.trunc(lat);
+  const latMax = latMin + 1;
+  const lonMin = Math.trunc(lon);
+  const lonMax = lonMin + 1;
+
+  const fetchUrl = new URL(process.env.NEXT_PUBLIC_API_URL + 'stamps');
+  fetchUrl.searchParams.append("lat-min", latMin.toString());
+  fetchUrl.searchParams.append("lat-max", latMax.toString());
+  fetchUrl.searchParams.append("lon-min", lonMin.toString());
+  fetchUrl.searchParams.append("lon-max", lonMax.toString());
+
+  const cacheKey = `${latMin}_${lonMin}`;
+  const valueInCache = stampCache.get(cacheKey);
+  if (valueInCache !== undefined) {
+    return valueInCache;
+  }
+
+  const response = await fetch(fetchUrl);
+
+  if (response.ok) {
+    const stamps: Stamp[] = await response.json();
+    console.log(stamps);
+    stampCache.set(cacheKey, stamps);
+    return stamps;
+  }
+  else {
+    // TODO: Error handling
+    console.log("bad response");
+    return [];
+  }
+}
+
+function LoadingDiv() {
+  return <div className="absolute z-50 top-0 left-0 bottom-0 right-0 m-auto self-center text-center">
+    <p>Loading...</p>
+  </div>
+}
+
 export default function PageClient({ markers }: HomePageClientParams) {
 
     // TODO: show number markers at a certain size, and the individual pins at another
     // TODO: Load data server side. Also compress/decompress it with gzip and reducing field names.
     const [lastClickedMarkerKey, setLastClickedMarkerKey] = useState<null|number|string>(null);
     const [zoomLevel, setZoomLevel] = useState(defaultZoom);
+    const [location, setLocation] = useState(defaultCenter);
+    const [displayedMarkers, setDisplayedMarkers] = useState<Stamp[] | "loading">([]);
     const [checkedLayers, setCheckedLayers] = useState({
       "Train Station": true,
       "Roadside Station": true,
@@ -64,21 +106,35 @@ export default function PageClient({ markers }: HomePageClientParams) {
       "Sightseeing Spot": true
     });
 
+    useEffect(() => {
+      (async function() {
+        if (zoomLevel >= zoomCutoff) {
+          setDisplayedMarkers(await getStamps(location.lat, location.lon));
+        }
+      })();
+    }, [location, zoomLevel]);
+
     let markerElements: JSX.Element[];
+    let isLoading = false;
     if (zoomLevel >= zoomCutoff) {
-        markerElements = [
-        <Marker key={0} position={[35.6764, 139.6500]}
-          eventHandlers={{
-            click: (e) => {
-              setLastClickedMarkerKey(0)
-            }
-          }}>
-          <StampMapPopup isOpen={0 === lastClickedMarkerKey} id="0"/>
-        </Marker>
-      ]; // TODO: Load all stamps for the prefecture in the center and all surrounding prefectures
+      if (displayedMarkers === 'loading') {
+        markerElements = [];
+        isLoading = true;
+      }
+      else {
+        markerElements = displayedMarkers.map(m => 
+          <Marker key={m.id} position={[m.location.lat, m.location.lon]}
+            eventHandlers={{
+              click: (e) => {
+                setLastClickedMarkerKey(m.id)
+              }
+            }}>
+            <StampMapPopup isOpen={m.id === lastClickedMarkerKey} id={m.id}/>
+          </Marker>
+        );
+      }
     }
     else {
-        // TODO: Memoize
         markerElements = markers.map(p => <PrefectureMarker key={p.name} value={p.count} lat={p.lat} lon={p.lon}/>)
     }
 
@@ -91,14 +147,14 @@ export default function PageClient({ markers }: HomePageClientParams) {
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
             crossOrigin=""></Script>
         <MapContainer
-            center={[35.6764, 139.6500]}
+            center={[defaultCenter.lat, defaultCenter.lon]}
             zoom={defaultZoom}
             scrollWheelZoom={true}
             style={{
                 "height": "100%",
                 "zIndex": "0"
             }}>
-        <MapEventListener zoomLevel={zoomLevel} setZoomLevel={setZoomLevel}/>
+        <MapEventListener setZoomLevel={setZoomLevel} setLocation={setLocation}/>
         <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
@@ -109,6 +165,7 @@ export default function PageClient({ markers }: HomePageClientParams) {
                 </LayerGroup>
             </LayersControlOverlay>
         </LayersControl>
-        </MapContainer>
+      </MapContainer>
+      <LoadingDiv/>
     </main>
 }

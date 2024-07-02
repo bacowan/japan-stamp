@@ -12,12 +12,11 @@ import type { NextRequest } from "next/server";
 
 async function LoadPrefectureData(): Promise<{[name: string]: number}> {
   const response = await fetch(
-    process.env.API_URL + 'prefecture-stamps',
+    process.env.NEXT_PUBLIC_API_URL + 'prefecture-stamps',
     { cache: 'no-cache' }); // TODO: Add caching
 
   if (response.ok) {
     const asJson = await response.json();
-    console.log(asJson);
     
     if (Array.isArray(asJson)) {
       const ret: {[name: string]: number} = {};

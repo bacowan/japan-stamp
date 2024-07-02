@@ -8,8 +8,8 @@ export async function GET(request: Request) {
   
     try { 
       await client.connect();
-      const database = client.db('japan_stamp'); // Choose a name for your database 
-      const collection = database.collection('prefecture_stamps'); // Choose a name for your collection 
+      const database = client.db('japan_stamp');
+      const collection = database.collection('prefecture_stamps'); 
       const allData = await collection.find({}).toArray(); 
   
       return new Response(JSON.stringify(allData));
