@@ -86,8 +86,10 @@ async function getStamps(lat: number, lon: number): Promise<Stamp[]> {
 }
 
 function LoadingDiv() {
-  return <div className="absolute z-50 top-0 left-0 bottom-0 right-0 m-auto self-center text-center">
-    <p>Loading...</p>
+  return <div className="absolute z-50 top-0 left-0 bottom-0 right-0 flex flex-col items-center justify-center pointer-events-none">
+    <p className="bg-white m-2 p-2 rounded border-solid border-black border-2">
+      Loading...
+    </p>
   </div>
 }
 
@@ -109,6 +111,7 @@ export default function PageClient({ markers }: HomePageClientParams) {
     useEffect(() => {
       (async function() {
         if (zoomLevel >= zoomCutoff) {
+          setDisplayedMarkers('loading');
           setDisplayedMarkers(await getStamps(location.lat, location.lon));
         }
       })();
@@ -166,6 +169,6 @@ export default function PageClient({ markers }: HomePageClientParams) {
             </LayersControlOverlay>
         </LayersControl>
       </MapContainer>
-      <LoadingDiv/>
+      { isLoading && <LoadingDiv/> }
     </main>
 }

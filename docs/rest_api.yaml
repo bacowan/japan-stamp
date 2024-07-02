@@ -1,0 +1,182 @@
+openapi: 3.0.0
+info:
+  title: Japan Stamp
+  description: Keep track of stamps you find around the country
+  version: 0.1.9
+tags:
+  - name: stamps
+    description: Information about individual stamps
+  - name: prefectures
+    description: Aggregated information about all of the stamps in each prefecture
+paths:
+  /stamps:
+    get:
+      tags:
+        - stamps
+      summary: Query for stamps
+      description: There are 3 different ways to query.
+      parameters:
+        - name: lat-min
+          in: query
+          description: When querying over an area, the minimum latitude value of the area being querried.
+          required: false
+          schema:
+            type: number
+        - name: lat-max
+          in: query
+          description: When querying over an area, the maximum latitude value of the area being querried.
+          required: false
+          schema:
+            type: number
+        - name: lon-min
+          in: query
+          description: When querying over an area, the minimum longitude value of the area being querried.
+          required: false
+          schema:
+            type: number
+        - name: lon-max
+          in: query
+          description: When querying over an area, the maximum longitude value of the area being querried.
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: object
+                      properties:
+                        english:
+                          type: string
+                        japanese:
+                          type: string
+                    location:
+                      type: object
+                      properties:
+                        lat:
+                          type: number
+                        lon:
+                          type: number
+                    imageUrl:
+                      type: string
+                    description:
+                      properties:
+                        english:
+                          type: string
+                        japanese:
+                          type: string
+    post:
+      tags:
+        - stamps
+      summary: Add a new stamp
+      description: An ID will be automatically assigned and returned. The stamp must have a unique lat and lon.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: object
+                  properties:
+                    english:
+                      type: string
+                    japanese:
+                      type: string
+                location:
+                  type: object
+                  properties:
+                    lat:
+                      type: number
+                    lon:
+                      type: number
+                imageUrl:
+                  type: string
+                description:
+                  type: object
+                  properties:
+                    english:
+                      type: string
+                    japanese:
+                      type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+  /stamps/{id}:
+    get:
+      tags:
+        - stamps
+      summary: get information for a single stamp
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: object
+                    properties:
+                      english:
+                        type: string
+                      japanese:
+                        type: string
+                  location:
+                    type: object
+                    properties:
+                      lat:
+                        type: number
+                      lon:
+                        type: number
+                  imageUrl:
+                    type: string
+                  description:
+                    properties:
+                      english:
+                        type: string
+                      japanese:
+                        type: string
+  /prefecture-stamps:
+    get:
+      tags:
+        - prefectures
+      summary: Get a summary of the stamps in all prefectures
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    count:
+                      type: integer

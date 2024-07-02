@@ -123,12 +123,9 @@ export default function AddStampPage() {
                     style={{
                         "zIndex": "50",
                         "position": "absolute",
-                        "top": "0",
                         "left": "0",
-                        "bottom": "0",
+                        "bottom": "50%",
                         "right": "0",
-                        "width": "2em",
-                        "height": "2em",
                         "margin": "auto",
                         "pointerEvents": "none"
                     }}/>
