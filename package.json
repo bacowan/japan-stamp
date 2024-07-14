@@ -11,6 +11,8 @@
   "dependencies": {
     "@neondatabase/serverless": "^0.9.4",
     "@vercel/postgres": "^0.9.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
     "firebase": "^10.12.2",
     "firebaseui": "^6.1.0",
     "leaflet": "^1.9.4",

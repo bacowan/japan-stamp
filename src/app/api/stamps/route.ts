@@ -1,6 +1,10 @@
 import Stamp, { toStampArray } from "@/app/api-response-types/stamp";
 import checkAttribute from "@/utils/check-attribute";
 import { MongoClient } from "mongodb";
+import { IsEmail, IsNotEmpty, Max, Min, validate, ValidateNested, ValidationArguments, ValidatorConstraintInterface } from "class-validator";
+import { AtLeastOne } from "@/utils/validators/at-least-one";
+import { plainToClass, plainToInstance } from "class-transformer";
+import { PostBody } from "./classes"
 
 // setting it to dynamic makes it get a new response each time. Otherwise it caches.
 // TODO: Look into how the caching works
@@ -103,73 +107,14 @@ export async function GET(request: Request) {
   }
 }
 
-interface PostBody {
-  name: {
-      english?: string,
-      japanese?: string
-  },
-  location: {
-      lat: number,
-      lon: number
-  },
-  imageBase64: string,
-  description: {
-      english?: string,
-      japanese?: string
-  }
-}
-
-function validatePostBody(body: string): (PostBody | string) {
-  const bodyObj = JSON.parse(body);
-  if (!("name" in bodyObj)) {
-    return "name is required";
-  }
-  else if (!("english" in bodyObj.name) && !("japanese" in bodyObj.name)) {
-    return "either name.english or name.japanese is required";
-  }
-  else if (!("location" in bodyObj)) {
-    return "location is required";
-  }
-  else if (!("lat" in bodyObj.location)) {
-    return "location.lat is required";
-  }
-  else if (!("lon" in bodyObj.location)) {
-    return "location.lon is required";
-  }
-  else if (!("imageBase64" in bodyObj)) {
-    return "imageBase64 is required";
-  }
-  else if (!("description" in bodyObj)) {
-    return "description is required";
-  }
-  else if (!("english" in bodyObj.description) && !("japanese" in bodyObj.description)) {
-    return "either description.english or description.japanese is required";
-  }
-  else {
-    return {
-      name: {
-        english: bodyObj.name.english,
-        japanese: bodyObj.name.japanese
-      },
-      location: {
-          lat: bodyObj.lat,
-          lon: bodyObj.lon
-      },
-      imageBase64: bodyObj.imageBase64,
-      description: {
-          english: bodyObj.description.english,
-          japanese: bodyObj.description.japanese
-      }
-    }
-  }
-}
-
 export async function POST(request: Request) {
   if (process.env.MONGODB_URI !== undefined) {
 
-    const body = validatePostBody(await request.text());
-    if (typeof body === 'string') {
-      return new Response(body, {
+    const body = plainToInstance(PostBody, JSON.parse(await request.text()))
+
+    const validation_errors = await validate(body);
+    if (validation_errors.length > 0) {
+      return new Response(validation_errors.toString(), {
         status: 400
       });
     }
