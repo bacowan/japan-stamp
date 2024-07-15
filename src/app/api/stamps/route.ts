@@ -4,18 +4,13 @@ import { MongoClient } from "mongodb";
 import { IsEmail, IsNotEmpty, Max, Min, validate, ValidateNested, ValidationArguments, ValidatorConstraintInterface } from "class-validator";
 import { AtLeastOne } from "@/utils/validators/at-least-one";
 import { plainToClass, plainToInstance } from "class-transformer";
-import { PostBody } from "./classes"
+import { GetParams, PostBody } from "./classes"
 
 // setting it to dynamic makes it get a new response each time. Otherwise it caches.
 // TODO: Look into how the caching works
 //export const dynamic = 'force-dynamic'; // static by default, unless reading the request
 
-interface GetParams {
-  latMin: number;
-  latMax: number;
-  lonMin: number;
-  lonMax: number;
-}
+
 
 function validateGet(url: string): (GetParams | string) {
   const urlObj = new URL(url);
@@ -75,7 +70,6 @@ export async function GET(request: Request) {
 
       const asStamps = toStampArray(allData);
 
-      console.log(asStamps);
       return new Response(
         JSON.stringify(asStamps),
         {

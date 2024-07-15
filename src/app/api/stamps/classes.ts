@@ -33,3 +33,10 @@ class LangText {
     @ValidateNested()
     description!: LangText;
   }
+
+export interface GetParams {
+    latMin: number;
+    latMax: number;
+    lonMin: number;
+    lonMax: number;
+  }
