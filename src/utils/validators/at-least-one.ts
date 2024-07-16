@@ -11,7 +11,7 @@ export function AtLeastOne(properties: string[], validationOptions?: ValidationO
       validator: {
         validate(value: any, args: ValidationArguments) {
           return args.constraints
-            .map(c => (object as any)[c])
+            .map(c => (args.object as any)[c])
             .some(c => c !== null && c !== undefined);
         },
       },
