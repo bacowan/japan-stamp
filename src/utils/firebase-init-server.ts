@@ -3,7 +3,6 @@
 
 import { getAuth } from 'firebase-admin/auth';
 import firebase from 'firebase/compat/app';
-import firebaseConfig from "../../firebase-config";
 import "firebase/compat/storage";
 import { applicationDefault, getApps, initializeApp } from 'firebase-admin/app';
 
@@ -13,7 +12,7 @@ process.env.STORAGE_EMULATOR_HOST = 'http://127.0.0.1:9199';
 
 if (!getApps().length) initializeApp({
     credential: applicationDefault(),
-    storageBucket: firebaseConfig.storageBucket
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
 });
 export const auth = getAuth();
 //export const storage = firebase.storage();
