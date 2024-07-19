@@ -1,7 +1,7 @@
 'use client'
 
 // Import the functions you need from the SDKs you need
-import auth from '../../utils/firebase-init';
+import { auth } from '../../utils/firebase-init-client';
 import { useEffect } from "react";
 import authConfig from "../../../firebase-config/auth-config";
 import 'firebaseui/dist/firebaseui.css'

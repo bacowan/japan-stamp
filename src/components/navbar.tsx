@@ -1,6 +1,6 @@
 'use client'
 
-import auth from '../utils/firebase-init';
+import { auth } from '../utils/firebase-init-client';
 import { MouseEventHandler, MutableRefObject, PropsWithChildren, useEffect, useState } from "react";
 import { usePathname } from 'next/navigation';
 import { onAuthStateChanged, signOut } from "firebase/auth";

@@ -1,6 +1,6 @@
 import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
-import auth from '../utils/firebase-init';
+import { auth } from './firebase-init-client';
 
 function useSignedIn() {
     const [isSignedIn, setIsSignedIn] = useState<boolean | null>(null);

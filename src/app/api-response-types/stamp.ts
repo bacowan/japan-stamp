@@ -4,11 +4,16 @@ import checkAttribute from "@/utils/check-attribute";
 export function toStampArray(input: any): Stamp[] {
     if (Array.isArray(input)) {
         return input.map(i => {
-            checkAttribute(i, "_id");
-            checkAttribute(i, "name");
-            checkAttribute(i, "location", "coordinates", "");
-            checkAttribute(i, "image-url");
-            checkAttribute(i, "description");
+            try {
+                checkAttribute(i, "_id"); // todo: switch to class-validator
+                checkAttribute(i, "name");
+                checkAttribute(i, "location", "coordinates", "");
+                checkAttribute(i, "image-path");
+                checkAttribute(i, "description");
+            }
+            catch {
+                return null;
+            }
             return {
                 id: i._id,
                 name: i.name,
@@ -20,6 +25,7 @@ export function toStampArray(input: any): Stamp[] {
                 description: i.description
             };
         })
+        .filter(x => x !== null)
     }
     else {
         throw "Stamps should be an array"

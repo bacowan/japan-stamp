@@ -4,8 +4,8 @@ import StampMapPopup from "@/components/stamp-map-popup";
 import dynamic from "next/dynamic";
 import Script from "next/script";
 import { useEffect, useState } from "react";
-import { useMapEvents } from "react-leaflet";
 import Stamp, { toStampArray } from "./api-response-types/stamp";
+import MapEventListener from "@/utils/map-event-listener";
 
 const MapContainer = dynamic(() => import('react-leaflet').then((module) => module.MapContainer), { ssr: false });
 const Marker = dynamic(() => import('react-leaflet').then((module) => module.Marker), { ssr: false });
@@ -14,41 +14,22 @@ const LayersControl = dynamic(() => import('react-leaflet').then((module) => mod
 const LayerGroup = dynamic(() => import('react-leaflet').then((module) => module.LayerGroup), { ssr: false });
 const LayersControlOverlay = dynamic(() => import('react-leaflet').then((module) => module.LayersControl.Overlay), { ssr: false });
 const PrefectureMarker = dynamic(() => import('../components/prefecture-marker'), {
-    loading: () => <div>loading...</div>,
-    ssr: false,
+  loading: () => <div>loading...</div>,
+  ssr: false,
 });
 
 const defaultZoom = 5;
 const zoomCutoff = 11;
-const defaultCenter: {lat: number, lon: number} = { lat: 35.6764, lon: 139.6500 };
-
-interface MapEventListenerProps {
-  setZoomLevel: (zoomLevel: number) => void,
-  setLocation: (location: {lat: number, lon: number}) => void
-}
-
-function MapEventListener({setZoomLevel, setLocation}: MapEventListenerProps) {
-  const mapEvents = useMapEvents({
-    zoomend: () => {
-      setZoomLevel(mapEvents.getZoom());
-    },
-    moveend: () => {
-      const center = mapEvents.getCenter()
-      setLocation({lat: center.lat, lon: center.lng});
-    }
-  });
-
-  return null;
-}
+const defaultCenter: { lat: number, lon: number } = { lat: 35.6764, lon: 139.6500 };
 
 export interface HomePageClientParams {
-    markers: {
-        id: number,
-        name: string,
-        lat: number,
-        lon: number,
-        count: number
-    }[]
+  markers: {
+    id: number,
+    name: string,
+    lat: number,
+    lon: number,
+    count: number
+  }[]
 }
 
 const stampCache = new Map<string, Stamp[]>();
@@ -70,7 +51,7 @@ async function getStamps(lat: number, lon: number): Promise<Stamp[]> {
     return valueInCache;
   }
 
-  const response = await fetch(fetchUrl);
+  const response = await fetch(fetchUrl, { cache: 'no-store' }); // TODO: legit caching
 
   if (response.ok) {
     const stamps: Stamp[] = await response.json();
@@ -95,80 +76,80 @@ function LoadingDiv() {
 
 export default function PageClient({ markers }: HomePageClientParams) {
 
-    // TODO: show number markers at a certain size, and the individual pins at another
-    // TODO: Load data server side. Also compress/decompress it with gzip and reducing field names.
-    const [lastClickedMarkerKey, setLastClickedMarkerKey] = useState<null|number|string>(null);
-    const [zoomLevel, setZoomLevel] = useState(defaultZoom);
-    const [location, setLocation] = useState(defaultCenter);
-    const [displayedMarkers, setDisplayedMarkers] = useState<Stamp[] | "loading">([]);
-    const [checkedLayers, setCheckedLayers] = useState({
-      "Train Station": true,
-      "Roadside Station": true,
-      "Shrine": true,
-      "Sightseeing Spot": true
-    });
+  // TODO: show number markers at a certain size, and the individual pins at another
+  // TODO: Load data server side. Also compress/decompress it with gzip and reducing field names.
+  const [lastClickedMarkerKey, setLastClickedMarkerKey] = useState<null | number | string>(null);
+  const [zoomLevel, setZoomLevel] = useState(defaultZoom);
+  const [location, setLocation] = useState(defaultCenter);
+  const [displayedMarkers, setDisplayedMarkers] = useState<Stamp[] | "loading">([]);
+  const [checkedLayers, setCheckedLayers] = useState({
+    "Train Station": true,
+    "Roadside Station": true,
+    "Shrine": true,
+    "Sightseeing Spot": true
+  });
 
-    useEffect(() => {
-      (async function() {
-        if (zoomLevel >= zoomCutoff) {
-          setDisplayedMarkers('loading');
-          setDisplayedMarkers(await getStamps(location.lat, location.lon));
-        }
-      })();
-    }, [location, zoomLevel]);
+  useEffect(() => {
+    (async function () {
+      if (zoomLevel >= zoomCutoff) {
+        setDisplayedMarkers('loading');
+        setDisplayedMarkers(await getStamps(location.lat, location.lon));
+      }
+    })();
+  }, [location, zoomLevel]);
 
-    let markerElements: JSX.Element[];
-    let isLoading = false;
-    if (zoomLevel >= zoomCutoff) {
-      if (displayedMarkers === 'loading') {
-        markerElements = [];
-        isLoading = true;
-      }
-      else {
-        markerElements = displayedMarkers.map(m => 
-          <Marker key={m.id} position={[m.location.lat, m.location.lon]}
-            eventHandlers={{
-              click: (e) => {
-                setLastClickedMarkerKey(m.id)
-              }
-            }}>
-            <StampMapPopup isOpen={m.id === lastClickedMarkerKey} id={m.id}/>
-          </Marker>
-        );
-      }
+  let markerElements: JSX.Element[];
+  let isLoading = false;
+  if (zoomLevel >= zoomCutoff) {
+    if (displayedMarkers === 'loading') {
+      markerElements = [];
+      isLoading = true;
     }
     else {
-        markerElements = markers.map(p => <PrefectureMarker key={p.name} value={p.count} lat={p.lat} lon={p.lon}/>)
+      markerElements = displayedMarkers.map(m =>
+        <Marker key={m.id} position={[m.location.lat, m.location.lon]}
+          eventHandlers={{
+            click: (e) => {
+              setLastClickedMarkerKey(m.id)
+            }
+          }}>
+          <StampMapPopup isOpen={m.id === lastClickedMarkerKey} id={m.id} />
+        </Marker>
+      );
     }
+  }
+  else {
+    markerElements = markers.map(p => <PrefectureMarker key={p.name} value={p.count} lat={p.lat} lon={p.lon} />)
+  }
 
-    return <main
-        style={{
-            "flex": "1 1 auto",
-            "position": "relative"
-        }}>
-        <Script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossOrigin=""></Script>
-        <MapContainer
-            center={[defaultCenter.lat, defaultCenter.lon]}
-            zoom={defaultZoom}
-            scrollWheelZoom={true}
-            style={{
-                "height": "100%",
-                "zIndex": "0"
-            }}>
-        <MapEventListener setZoomLevel={setZoomLevel} setLocation={setLocation}/>
-        <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
-        <LayersControl position="topright">
-            <LayersControlOverlay checked={true} name="Marker with popup">
-                <LayerGroup>
-                    {markerElements}
-                </LayerGroup>
-            </LayersControlOverlay>
-        </LayersControl>
-      </MapContainer>
-      { isLoading && <LoadingDiv/> }
-    </main>
+  return <main
+    style={{
+      "flex": "1 1 auto",
+      "position": "relative"
+    }}>
+    <Script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossOrigin=""></Script>
+    <MapContainer
+      center={[defaultCenter.lat, defaultCenter.lon]}
+      zoom={defaultZoom}
+      scrollWheelZoom={true}
+      style={{
+        "height": "100%",
+        "zIndex": "0"
+      }}>
+      <MapEventListener setZoomLevel={setZoomLevel} setLocation={setLocation} />
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      <LayersControl position="topright">
+        <LayersControlOverlay checked={true} name="Marker with popup">
+          <LayerGroup>
+            {markerElements}
+          </LayerGroup>
+        </LayersControlOverlay>
+      </LayersControl>
+    </MapContainer>
+    {isLoading && <LoadingDiv />}
+  </main>
 }

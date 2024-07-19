@@ -1,6 +1,5 @@
 import Script from "next/script";
 import { useMapEvents } from "react-leaflet";
-import { useState } from "react";
 import { renderToString } from "react-dom/server";
 import { PrefectureLocations } from "@/utils/constant-data";
 import StampMapPopup from "@/components/stamp-map-popup";

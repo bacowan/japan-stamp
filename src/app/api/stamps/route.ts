@@ -1,17 +1,15 @@
-import { NextRequest } from "next/server";
 import getRequest from "./get";
 import postRequest from "./post";
-import { NextApiRequest } from "next";
 
 // setting it to dynamic makes it get a new response each time. Otherwise it caches.
 // TODO: Look into how the caching works
 //export const dynamic = 'force-dynamic'; // static by default, unless reading the request
 
-export const config = {
+/*export const config = {
   api: {
       bodyParser: false, // Disable the default body parser to handle multipart/form-data
   },
-};
+};*/
 
 export async function GET(request: Request) {
   return await getRequest(request);

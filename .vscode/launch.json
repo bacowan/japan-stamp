@@ -22,6 +22,9 @@
           "pattern": "- Local:.+(https?://.+)",
           "uriFormat": "%s",
           "action": "debugWithChrome"
+        },
+        "env": {
+          "GOOGLE_APPLICATION_CREDENTIALS": "C:\\Users\\bccow\\Downloads\\japan-stamp-firebase-adminsdk-kques-47fa7d788e.json"
         }
       }
     ]
