@@ -6,8 +6,6 @@ import StampMapPopup from "@/components/stamp-map-popup";
 import L from "leaflet";
 import dynamic from "next/dynamic";
 import PageClient from "./page-client";
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
 async function LoadPrefectureData(): Promise<{[name: string]: number}> {
   const response = await fetch(
@@ -44,7 +42,7 @@ async function LoadPrefectureData(): Promise<{[name: string]: number}> {
 }
 
 
-export default async function Home(request: NextRequest) {
+export default async function Home(request: Request) {
   const prefectureData = await LoadPrefectureData();
 
   const markers = PrefectureLocations.map(l => ({
