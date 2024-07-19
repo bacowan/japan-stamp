@@ -42,7 +42,7 @@ async function LoadPrefectureData(): Promise<{[name: string]: number}> {
 }
 
 
-export default async function Home(request: Request) {
+export default async function Home() {
   const prefectureData = await LoadPrefectureData();
 
   const markers = PrefectureLocations.map(l => ({
