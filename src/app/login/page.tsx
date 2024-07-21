@@ -2,13 +2,13 @@
 
 // Import the functions you need from the SDKs you need
 import { auth } from '../../utils/firebase-init-client';
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import authConfig from "../../../firebase-config/auth-config";
 import 'firebaseui/dist/firebaseui.css'
 import { redirect, useSearchParams } from 'next/navigation'
 import useSignedIn from '@/utils/use-signed-in';
 
-export default function Login() {
+function LoginPage() {
     const searchParams = useSearchParams();
     const isSignedIn = useSignedIn();
 
@@ -33,4 +33,10 @@ export default function Login() {
     return <div className="p-10">
         <div id="firebaseui-auth-container"></div>
     </div>
+}
+
+export default function Login() {
+    return <Suspense>
+        <LoginPage/>
+    </Suspense>
 }

@@ -4,7 +4,7 @@ import StampMapPopup from "@/components/stamp-map-popup";
 import dynamic from "next/dynamic";
 import Script from "next/script";
 import { useEffect, useState } from "react";
-import Stamp, { toStampArray } from "./api-response-types/stamp";
+import Stamp from "./api-response-types/stamp";
 import MapEventListener from "@/utils/map-event-listener";
 
 const MapContainer = dynamic(() => import('react-leaflet').then((module) => module.MapContainer), { ssr: false });

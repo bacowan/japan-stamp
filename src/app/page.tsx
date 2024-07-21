@@ -1,14 +1,11 @@
-import Script from "next/script";
-import { useMapEvents } from "react-leaflet";
-import { renderToString } from "react-dom/server";
 import { PrefectureLocations } from "@/utils/constant-data";
-import StampMapPopup from "@/components/stamp-map-popup";
-import L from "leaflet";
-import dynamic from "next/dynamic";
 import PageClient from "./page-client";
 
 async function LoadPrefectureData(): Promise<{[name: string]: number}> {
-  const response = await fetch(
+  return {}
+  // TODO: Don't do this through the REST API, do it directly since
+  // this is on the server anyways (and happens during build)
+  /*const response = await fetch(
     process.env.NEXT_PUBLIC_API_URL + 'prefecture-stamps',
     { cache: 'no-cache' }); // TODO: Add caching
 
@@ -38,7 +35,7 @@ async function LoadPrefectureData(): Promise<{[name: string]: number}> {
     // TODO: Error handling
     console.log("response not okay");
     return {};
-  } 
+  }*/
 }
 
 
