@@ -6,6 +6,7 @@ import Script from "next/script";
 import { useEffect, useState } from "react";
 import Stamp from "./api-response-types/stamp";
 import MapEventListener from "@/utils/map-event-listener";
+import useTranslation from 'next-translate/useTranslation';
 
 const MapContainer = dynamic(() => import('react-leaflet').then((module) => module.MapContainer), { ssr: false });
 const Marker = dynamic(() => import('react-leaflet').then((module) => module.Marker), { ssr: false });
@@ -67,9 +68,11 @@ async function getStamps(lat: number, lon: number): Promise<Stamp[]> {
 }
 
 function LoadingDiv() {
+  const { t } = useTranslation('home');
+
   return <div className="absolute z-50 top-0 left-0 bottom-0 right-0 flex flex-col items-center justify-center pointer-events-none">
     <p className="bg-white m-2 p-2 rounded border-solid border-black border-2">
-      Loading...
+      {t("loading")}
     </p>
   </div>
 }
@@ -81,7 +84,7 @@ export default function PageClient({ markers }: HomePageClientParams) {
   const [lastClickedMarkerKey, setLastClickedMarkerKey] = useState<null | number | string>(null);
   const [zoomLevel, setZoomLevel] = useState(defaultZoom);
   const [location, setLocation] = useState(defaultCenter);
-  const [displayedMarkers, setDisplayedMarkers] = useState<Stamp[] | "loading">([]);
+  const [displayedMarkers, setDisplayedMarkers] = useState<Stamp[] | null>([]);
   const [checkedLayers, setCheckedLayers] = useState({
     "Train Station": true,
     "Roadside Station": true,
@@ -92,7 +95,7 @@ export default function PageClient({ markers }: HomePageClientParams) {
   useEffect(() => {
     (async function () {
       if (zoomLevel >= zoomCutoff) {
-        setDisplayedMarkers('loading');
+        setDisplayedMarkers(null);
         setDisplayedMarkers(await getStamps(location.lat, location.lon));
       }
     })();
@@ -101,7 +104,7 @@ export default function PageClient({ markers }: HomePageClientParams) {
   let markerElements: JSX.Element[];
   let isLoading = false;
   if (zoomLevel >= zoomCutoff) {
-    if (displayedMarkers === 'loading') {
+    if (displayedMarkers === null) {
       markerElements = [];
       isLoading = true;
     }

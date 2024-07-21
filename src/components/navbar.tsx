@@ -7,6 +7,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { FaUserCircle } from "react-icons/fa";
 import { IconContext } from "react-icons";
 import useSignedIn from '@/utils/use-signed-in';
+import useTranslation from 'next-translate/useTranslation';
 
 interface StyledLinkProps {
     ref?: MutableRefObject<null>,
@@ -29,6 +30,8 @@ function StyledLink({ children, isActive = false, href = "", onClick, ref }: Pro
 }
 
 export default function Navbar() {
+    const { t } = useTranslation('navbar');
+
     const [isUserMenuShown, setIsUserMenuShown] = useState(false);
 
     const isSignedIn = useSignedIn();
@@ -47,7 +50,7 @@ export default function Navbar() {
                 setIsUserMenuShown(false);
                 e.preventDefault();
             }} className='cursor-pointer p-2.5 block hover:bg-slate-400'>
-                Log Out
+                {t("log-out")}
             </a>
         </div>
     }
@@ -74,10 +77,10 @@ export default function Navbar() {
         <div className="bg-[#f1f1f1] p-2.5 grow-0 shrink-0 basis-[auto] relative">
             <StyledLink href="/">Japan Stamp</StyledLink>
             <div className="float-none sm:float-right">
-                <StyledLink isActive={pathname === "/"} href="/">Map</StyledLink>
-                <StyledLink isActive={pathname === "/list"} href="list">List</StyledLink>
-                <StyledLink isActive={pathname === "/add-stamp"} href="add-stamp">Add Stamp</StyledLink>
-                <StyledLink isActive={pathname === "/about"} href="about">About</StyledLink>
+                <StyledLink isActive={pathname === "/"} href="/">{t("map")}</StyledLink>
+                <StyledLink isActive={pathname === "/list"} href="list">{t("list")}</StyledLink>
+                <StyledLink isActive={pathname === "/add-stamp"} href="add-stamp">{t("add-stamp")}</StyledLink>
+                <StyledLink isActive={pathname === "/about"} href="about">{t("about")}</StyledLink>
                 {userLink}
             </div>
             {userMenu}
