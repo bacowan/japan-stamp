@@ -4,9 +4,10 @@ import StampMapPopup from "@/components/stamp-map-popup";
 import dynamic from "next/dynamic";
 import Script from "next/script";
 import { useEffect, useState } from "react";
-import Stamp from "./api-response-types/stamp";
+import Stamp from "../api-response-types/stamp";
 import MapEventListener from "@/utils/map-event-listener";
-import useTranslation from 'next-translate/useTranslation';
+import { getTranslations } from "@/translate";
+import Locale from "@/locales/locale";
 
 const MapContainer = dynamic(() => import('react-leaflet').then((module) => module.MapContainer), { ssr: false });
 const Marker = dynamic(() => import('react-leaflet').then((module) => module.Marker), { ssr: false });
@@ -14,7 +15,7 @@ const TileLayer = dynamic(() => import('react-leaflet').then((module) => module.
 const LayersControl = dynamic(() => import('react-leaflet').then((module) => module.LayersControl), { ssr: false });
 const LayerGroup = dynamic(() => import('react-leaflet').then((module) => module.LayerGroup), { ssr: false });
 const LayersControlOverlay = dynamic(() => import('react-leaflet').then((module) => module.LayersControl.Overlay), { ssr: false });
-const PrefectureMarker = dynamic(() => import('../components/prefecture-marker'), {
+const PrefectureMarker = dynamic(() => import('../../components/prefecture-marker'), {
   loading: () => <div>loading...</div>,
   ssr: false,
 });
@@ -30,7 +31,8 @@ export interface HomePageClientParams {
     lat: number,
     lon: number,
     count: number
-  }[]
+  }[],
+  translations: Locale["common"]
 }
 
 const stampCache = new Map<string, Stamp[]>();
@@ -67,17 +69,16 @@ async function getStamps(lat: number, lon: number): Promise<Stamp[]> {
   }
 }
 
-function LoadingDiv() {
-  const { t } = useTranslation('home');
+function LoadingDiv({ translations }: { translations: Locale["common"] }) {
 
   return <div className="absolute z-50 top-0 left-0 bottom-0 right-0 flex flex-col items-center justify-center pointer-events-none">
     <p className="bg-white m-2 p-2 rounded border-solid border-black border-2">
-      {t("loading")}
+      {translations["loading"]}
     </p>
   </div>
 }
 
-export default function PageClient({ markers }: HomePageClientParams) {
+export default function PageClient({ markers, translations }: HomePageClientParams) {
 
   // TODO: show number markers at a certain size, and the individual pins at another
   // TODO: Load data server side. Also compress/decompress it with gzip and reducing field names.
@@ -153,6 +154,6 @@ export default function PageClient({ markers }: HomePageClientParams) {
         </LayersControlOverlay>
       </LayersControl>
     </MapContainer>
-    {isLoading && <LoadingDiv />}
+    {isLoading && <LoadingDiv translations={translations}/>}
   </main>
 }

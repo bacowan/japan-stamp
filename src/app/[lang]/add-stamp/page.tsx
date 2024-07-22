@@ -9,7 +9,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { useMap } from 'react-leaflet';
 import { Map } from 'leaflet'
 import MapEventListener from '@/utils/map-event-listener';
-import { auth } from '../../utils/firebase-init-client';
+import { auth } from '../../../utils/firebase-init-client';
 
 const defaultCenter: { lat: number, lon: number } = { lat: 35.6764, lon: 139.6500 };
 const languages = ["English", "Japanese"];

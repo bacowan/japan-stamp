@@ -1,7 +1,9 @@
-import nextTranslate from 'next-translate-plugin';
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  i18n: {
+    locales: ['en-US', 'jp'],
+    defaultLocale: 'en-US',
+  },
     compiler: {
         styledComponents: true,
     },
@@ -16,5 +18,3 @@ const nextConfig = {
         ],
       },
 };
-
-export default nextTranslate(nextConfig);

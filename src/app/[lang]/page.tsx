@@ -1,5 +1,6 @@
 import { PrefectureLocations } from "@/utils/constant-data";
 import PageClient from "./page-client";
+import { getTranslations } from "@/translate";
 
 async function LoadPrefectureData(): Promise<{[name: string]: number}> {
   return {}
@@ -39,7 +40,7 @@ async function LoadPrefectureData(): Promise<{[name: string]: number}> {
 }
 
 
-export default async function Home() {
+export default async function Home({ params }: { params: { lang: string } }) {
   const prefectureData = await LoadPrefectureData();
 
   const markers = PrefectureLocations.map(l => ({
@@ -50,5 +51,5 @@ export default async function Home() {
     count: l.name in prefectureData ? prefectureData[l.name] : 0
   }));
 
-  return <PageClient markers={markers}/>
+  return <PageClient markers={markers} translations={(await getTranslations(params.lang))["common"]}/>
 }

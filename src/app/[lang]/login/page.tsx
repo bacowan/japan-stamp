@@ -1,9 +1,9 @@
 'use client'
 
 // Import the functions you need from the SDKs you need
-import { auth } from '../../utils/firebase-init-client';
+import { auth } from '../../../utils/firebase-init-client';
 import { Suspense, useEffect } from "react";
-import authConfig from "../../../firebase-config/auth-config";
+import authConfig from "../../../../firebase-config/auth-config";
 import 'firebaseui/dist/firebaseui.css'
 import { redirect, useSearchParams } from 'next/navigation'
 import useSignedIn from '@/utils/use-signed-in';

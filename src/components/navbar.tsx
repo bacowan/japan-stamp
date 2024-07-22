@@ -7,7 +7,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { FaUserCircle } from "react-icons/fa";
 import { IconContext } from "react-icons";
 import useSignedIn from '@/utils/use-signed-in';
-import useTranslation from 'next-translate/useTranslation';
+import Locale from '@/locales/locale';
 
 interface StyledLinkProps {
     ref?: MutableRefObject<null>,
@@ -29,8 +29,7 @@ function StyledLink({ children, isActive = false, href = "", onClick, ref }: Pro
     </a>
 }
 
-export default function Navbar() {
-    const { t } = useTranslation('navbar');
+export default function Navbar({ translations }: { translations: Locale["navbar"] }) {
 
     const [isUserMenuShown, setIsUserMenuShown] = useState(false);
 
@@ -50,7 +49,7 @@ export default function Navbar() {
                 setIsUserMenuShown(false);
                 e.preventDefault();
             }} className='cursor-pointer p-2.5 block hover:bg-slate-400'>
-                {t("log-out")}
+                {translations["log-out"]}
             </a>
         </div>
     }
@@ -77,10 +76,10 @@ export default function Navbar() {
         <div className="bg-[#f1f1f1] p-2.5 grow-0 shrink-0 basis-[auto] relative">
             <StyledLink href="/">Japan Stamp</StyledLink>
             <div className="float-none sm:float-right">
-                <StyledLink isActive={pathname === "/"} href="/">{t("map")}</StyledLink>
-                <StyledLink isActive={pathname === "/list"} href="list">{t("list")}</StyledLink>
-                <StyledLink isActive={pathname === "/add-stamp"} href="add-stamp">{t("add-stamp")}</StyledLink>
-                <StyledLink isActive={pathname === "/about"} href="about">{t("about")}</StyledLink>
+                <StyledLink isActive={pathname === "/"} href="/">{translations["map"]}</StyledLink>
+                <StyledLink isActive={pathname === "/list"} href="list">{translations["list"]}</StyledLink>
+                <StyledLink isActive={pathname === "/add-stamp"} href="add-stamp">{translations["add-stamp"]}</StyledLink>
+                <StyledLink isActive={pathname === "/about"} href="about">{translations["about"]}</StyledLink>
                 {userLink}
             </div>
             {userMenu}
