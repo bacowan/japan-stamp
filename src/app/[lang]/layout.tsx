@@ -3,9 +3,7 @@ import { Inter } from "next/font/google";
 import Navbar from "@/components/navbar";
 import '@/app/ui/global.css';
 import { getTranslations } from "@/translate";
-
-
-const inter = Inter({ subsets: ["latin"] });
+import LangMetaHandler from "./lang-meta-handler";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,16 +18,8 @@ export default async function RootLayout({
   params: { lang: string };
 }>) {
   const translations = await getTranslations(params.lang);
+
   return (
-    <html lang={params.lang}>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
-        {/* TODO: make this only appear in the pages that use it (it doesn't seem to work with the Head component) */}
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-          crossOrigin=""/>
-      </head>
-      <body className={inter.className}>
         <div style={{
           "display": "flex",
           "flexDirection": "column",
@@ -37,8 +27,7 @@ export default async function RootLayout({
         }}>
           <Navbar translations={translations.navbar}/>
           {children}
+          <LangMetaHandler lang={params.lang}/>
         </div>
-      </body>
-    </html>
   );
 }
