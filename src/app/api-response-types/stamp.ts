@@ -21,7 +21,7 @@ export function toStampArray(input: any): Stamp[] {
                     lat: Number(i.location.coordinates[1]),
                     lon: Number(i.location.coordinates[0])
                 },
-                imageUrl: i.imageUrl,
+                imageUrl: i["image-path"],
                 description: i.description
             };
         })

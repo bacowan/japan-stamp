@@ -51,5 +51,5 @@ export default async function Home({ params }: { params: { lang: string } }) {
     count: l.name in prefectureData ? prefectureData[l.name] : 0
   }));
 
-  return <PageClient markers={markers} translations={(await getTranslations(params.lang))["common"]}/>
+  return <PageClient markers={markers} translations={(await getTranslations(params.lang))["common"]} lang={params.lang}/>
 }

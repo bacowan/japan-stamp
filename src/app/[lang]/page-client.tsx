@@ -32,7 +32,8 @@ export interface HomePageClientParams {
     lon: number,
     count: number
   }[],
-  translations: Locale["common"]
+  translations: Locale["common"],
+  lang: string
 }
 
 const stampCache = new Map<string, Stamp[]>();
@@ -78,7 +79,7 @@ function LoadingDiv({ translations }: { translations: Locale["common"] }) {
   </div>
 }
 
-export default function PageClient({ markers, translations }: HomePageClientParams) {
+export default function PageClient({ markers, translations, lang }: HomePageClientParams) {
 
   // TODO: show number markers at a certain size, and the individual pins at another
   // TODO: Load data server side. Also compress/decompress it with gzip and reducing field names.
@@ -117,7 +118,7 @@ export default function PageClient({ markers, translations }: HomePageClientPara
               setLastClickedMarkerKey(m.id)
             }
           }}>
-          <StampMapPopup isOpen={m.id === lastClickedMarkerKey} id={m.id} />
+          <StampMapPopup isOpen={m.id === lastClickedMarkerKey} stamp={m} lang={lang}/>
         </Marker>
       );
     }
