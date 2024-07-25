@@ -25,7 +25,7 @@ export default async function RootLayout({
           "flexDirection": "column",
           "height": "100vh"
         }}>
-          <Navbar translations={translations.navbar}/>
+          <Navbar translations={translations.navbar} lang={params.lang}/>
           {children}
           <LangMetaHandler lang={params.lang}/>
         </div>

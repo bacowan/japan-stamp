@@ -51,7 +51,7 @@ export default function PageClient({id, stamp, lang}: StampPageClientParams) {
     : [stamp.location.coordinates[1], stamp.location.coordinates[0]];
 
   return <>
-      <h1 className="text-center">
+      <h1 className="text-center text-2xl">
         <span>{name}</span>
         <sup className="text-xs">
           <a href="">Edit</a>
@@ -59,7 +59,7 @@ export default function PageClient({id, stamp, lang}: StampPageClientParams) {
       </h1>
       <Image className="block mx-auto w-1/2"
         src={imageUrl} alt="hi" height={100} width={100}></Image>
-      <h2 className="text-center">
+      <h2 className="text-center text-xl">
         Location
       </h2>
       <MapContainer
@@ -80,7 +80,7 @@ export default function PageClient({id, stamp, lang}: StampPageClientParams) {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
           <Marker position={location}></Marker>
       </MapContainer>
-      <h2 className="text-center">
+      <h2 className="text-center text-xl">
         Description
       </h2>
       <p>{description}</p>
