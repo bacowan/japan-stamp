@@ -6,7 +6,6 @@ import Script from "next/script";
 import { useEffect, useState } from "react";
 import Stamp from "../api-response-types/stamp";
 import MapEventListener from "@/utils/map-event-listener";
-import { getTranslations } from "@/translate";
 import Locale from "@/locales/locale";
 
 const MapContainer = dynamic(() => import('react-leaflet').then((module) => module.MapContainer), { ssr: false });

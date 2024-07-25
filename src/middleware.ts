@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
- 
-const locales = ['en-US', 'jp'];
-const defaultLocale = 'en-US';
+import { locales } from "./utils/translation/locale-text";
 
 export function middleware(request: NextRequest) {
   // Check if there is any supported locale in the pathname
@@ -13,7 +11,7 @@ export function middleware(request: NextRequest) {
   if (pathnameHasLocale) return
  
   // Redirect if there is no locale
-  request.nextUrl.pathname = `/${defaultLocale}${pathname}`
+  request.nextUrl.pathname = `/${locales[0]}${pathname}`
   return NextResponse.redirect(request.nextUrl)
 }
  

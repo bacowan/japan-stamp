@@ -1,6 +1,4 @@
 import { AtLeastOne } from "@/utils/validators/at-least-one";
-import { plainToInstance } from "class-transformer";
-import { IsNotEmpty, Max, Min, validate, ValidateNested, ValidationError } from "class-validator";
 import { MongoClient, ObjectId } from "mongodb";
 import { NextRequest } from "next/server";
 import { NextApiRequest } from "next";
@@ -12,35 +10,24 @@ import { fileTypeFromBlob } from "file-type";
 import sharp from "sharp";
 import { auth } from "../../../utils/firebase-init-server";
 import { getStorage } from "firebase-admin/storage";
-//const { getStorage } = require('firebase-admin/storage');
-
-//initializeApp();
-//storage; // force storage to load
+import { Stamp } from "@/app/database-structure/stamp";
+import { isLocaleText, LocaleText } from "@/utils/translation/locale-text";
 
 const validFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
 
-class LangText {
-    @AtLeastOne(["english", "japanese"], {
-        message: "Either english or japanese is required"
-    }) // class level validator
-    english?: string;
-    japanese?: string;
+function isLocation(input: any): input is Location {
+    return typeof input.lat === "number" && typeof input.lon === "number";
 }
 
-class Location {
-    @Min(-90)
-    @Max(90)
-    lat!: number;
-
-    @Min(-180)
-    @Max(180)
-    lon!: number;
+interface Location {
+    lat: number,
+    lon: number
 }
 
 interface PostFields {
-    name: LangText,
+    name: LocaleText,
     location: Location,
-    description: LangText
+    description: LocaleText
 }
 
 type ParsedForm = {
@@ -71,12 +58,11 @@ async function parseForm(request: Request): Promise<Result<ParsedForm>> {
             message: "name not supplied correctly"
         }
     }
-    const name = plainToInstance(LangText, JSON.parse(nameString));
-    const nameErrors = await validate(name);
-    if (nameErrors.length > 0) {
+    const name = JSON.parse(nameString);
+    if (!isLocaleText(name)) {
         return {
             type: "failure",
-            message: nameErrors.join("; ")
+            message: "name requires a valid language"
         }
     }
 
@@ -87,12 +73,12 @@ async function parseForm(request: Request): Promise<Result<ParsedForm>> {
             message: "location not supplied correctly"
         }
     }
-    const location = plainToInstance(Location, JSON.parse(locationString));
-    const locationErrors = await validate(name);
-    if (locationErrors.length > 0) {
+
+    const location = JSON.parse(locationString);
+    if (!isLocation(location)) {
         return {
             type: "failure",
-            message: locationErrors.join("; ")
+            message: "location not supplied correctly"
         }
     }
 
@@ -103,12 +89,11 @@ async function parseForm(request: Request): Promise<Result<ParsedForm>> {
             message: "description not supplied correctly"
         }
     }
-    const description = plainToInstance(LangText, JSON.parse(descriptionString));
-    const descriptionErrors = await validate(description);
-    if (descriptionErrors.length > 0) {
+    const description = JSON.parse(descriptionString);
+    if (!isLocaleText(description)) {
         return {
             type: "failure",
-            message: descriptionErrors.join("; ")
+            message: "name requires a valid language"
         }
     }
 

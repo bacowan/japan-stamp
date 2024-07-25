@@ -3,9 +3,9 @@ import Image from 'next/image';
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import Stamp from "@/app/api-response-types/stamp";
-import getTranslation from "@/utils/get-translation";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { storage } from "@/utils/firebase-init-client";
+import { textFromLang } from "@/utils/translation/extract-locale-text";
 
 const Popup = dynamic(() => import('react-leaflet').then((module) => module.Popup), { ssr: false });
 
@@ -39,7 +39,7 @@ export default function StampMapPopup({isOpen, stamp, lang}: StampMapPopupProps)
 
     return <Popup>
         <Link href={"/stamp/" + stamp.id}>
-            <h3>{getTranslation(lang, stamp.name)}</h3>
+            <h3>{textFromLang(stamp.name, lang)}</h3>
             {image}
         </Link>
     </Popup>

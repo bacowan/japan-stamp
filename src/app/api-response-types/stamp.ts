@@ -1,11 +1,12 @@
 import checkAttribute from "@/utils/check-attribute";
+import { LocaleText } from "@/utils/translation/locale-text";
 
-
+// TODO: Use user defined type guards instead
 export function toStampArray(input: any): Stamp[] {
     if (Array.isArray(input)) {
         return input.map(i => {
             try {
-                checkAttribute(i, "_id"); // todo: switch to class-validator
+                checkAttribute(i, "_id");
                 checkAttribute(i, "name");
                 checkAttribute(i, "location", "coordinates", "");
                 checkAttribute(i, "image-path");
@@ -34,17 +35,11 @@ export function toStampArray(input: any): Stamp[] {
 
 export default interface Stamp {
     id: string,
-    name: {
-        english?: string,
-        japanese?: string
-    },
+    name: LocaleText,
     location: {
         lat: number,
         lon: number
     },
     imageUrl: string,
-    description: {
-        english?: string,
-        japanese?: string
-    }
+    description: LocaleText
 }

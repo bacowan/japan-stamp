@@ -1,6 +1,6 @@
 import { PrefectureLocations } from "@/utils/constant-data";
 import PageClient from "./page-client";
-import { getTranslations } from "@/translate";
+import { getTranslations } from "@/utils/translation/translate";
 
 async function LoadPrefectureData(): Promise<{[name: string]: number}> {
   return {}

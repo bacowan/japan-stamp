@@ -3,6 +3,11 @@
 import { LatLngExpression } from "leaflet"
 import Image from 'next/image';
 import dynamic from "next/dynamic";
+import { Stamp } from "@/app/database-structure/stamp";
+import { textFromLang } from "@/utils/translation/extract-locale-text";
+import { useEffect, useState } from "react";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { storage } from "@/utils/firebase-init-client";
 
 const MapContainer = dynamic(() => import('react-leaflet').then((module) => module.MapContainer), { ssr: false });
 const Marker = dynamic(() => import('react-leaflet').then((module) => module.Marker), { ssr: false });
@@ -18,15 +23,32 @@ export type TodoResponse = {
 
 export interface StampPageClientParams {
     id: string,
-    todos: TodoResponse[]
+    stamp: Stamp | null,
+    lang: string
   }
 
   
-export default function PageClient({id, todos}: StampPageClientParams) {
-  const name = "Test stamp";
-  const imageUrl = "https://leafletjs.com/docs/images/logo.png";
-  const description = "stuff";
-  const location: LatLngExpression = [35.6764, 139.6500];
+export default function PageClient({id, stamp, lang}: StampPageClientParams) {
+  const [imageUrl, setImageUrl] = useState(""); // TODO: get placeholder image for default
+    
+  useEffect(() => {
+    (async function() {
+      if (stamp !== null) {
+        try {
+            setImageUrl(await getDownloadURL(ref(storage, stamp["image-path"]))); // TODO: Use react cache
+        }
+        catch {
+            // TODO: Logging
+        }
+      }
+    })();
+  }, [stamp]);
+  
+  const name = stamp === null ? "" : textFromLang(stamp.name, lang);
+  const description = stamp === null ? "" : textFromLang(stamp.description, lang);
+  const location: LatLngExpression = stamp === null || stamp.location.coordinates.length !== 2
+    ? [35.6764, 139.6500]
+    : [stamp.location.coordinates[1], stamp.location.coordinates[0]];
 
   return <>
       <h1 className="text-center">

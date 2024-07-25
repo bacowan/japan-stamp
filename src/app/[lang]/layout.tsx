@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Navbar from "@/components/navbar";
 import '@/app/ui/global.css';
-import { getTranslations } from "@/translate";
 import LangMetaHandler from "./lang-meta-handler";
+import { getTranslations } from "@/utils/translation/translate";
 
 export const metadata: Metadata = {
   title: "Create Next App",
