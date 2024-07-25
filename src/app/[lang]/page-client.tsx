@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import Stamp from "../api-response-types/stamp";
 import MapEventListener from "@/utils/map-event-listener";
 import Locale from "@/locales/locale";
+import { useMap } from "react-leaflet";
 
 const MapContainer = dynamic(() => import('react-leaflet').then((module) => module.MapContainer), { ssr: false });
 const Marker = dynamic(() => import('react-leaflet').then((module) => module.Marker), { ssr: false });
@@ -18,18 +19,19 @@ const PrefectureMarker = dynamic(() => import('../../components/prefecture-marke
   loading: () => <div>loading...</div>,
   ssr: false,
 });
+const HeatmapLayer = dynamic(() => import('../../components/heatmap-layer'), {
+  loading: () => <div>loading...</div>,
+  ssr: false,
+});
 
 const defaultZoom = 5;
 const zoomCutoff = 11;
 const defaultCenter: { lat: number, lon: number } = { lat: 35.6764, lon: 139.6500 };
 
 export interface HomePageClientParams {
-  markers: {
-    id: number,
-    name: string,
+  heatmapData: {
     lat: number,
-    lon: number,
-    count: number
+    lon: number
   }[],
   translations: Locale["common"],
   lang: string
@@ -78,7 +80,7 @@ function LoadingDiv({ translations }: { translations: Locale["common"] }) {
   </div>
 }
 
-export default function PageClient({ markers, translations, lang }: HomePageClientParams) {
+export default function PageClient({ heatmapData, translations, lang }: HomePageClientParams) {
 
   // TODO: show number markers at a certain size, and the individual pins at another
   // TODO: Load data server side. Also compress/decompress it with gzip and reducing field names.
@@ -123,7 +125,7 @@ export default function PageClient({ markers, translations, lang }: HomePageClie
     }
   }
   else {
-    markerElements = markers.map(p => <PrefectureMarker key={p.name} value={p.count} lat={p.lat} lon={p.lon} />)
+    markerElements = [];
   }
 
   return <main
@@ -153,6 +155,7 @@ export default function PageClient({ markers, translations, lang }: HomePageClie
           </LayerGroup>
         </LayersControlOverlay>
       </LayersControl>
+      {zoomLevel < zoomCutoff && <HeatmapLayer points={heatmapData}/>}
     </MapContainer>
     {isLoading && <LoadingDiv translations={translations}/>}
   </main>
