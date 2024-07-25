@@ -95,7 +95,7 @@ export default function Navbar({ translations, lang }: NavbarProps) {
         <div className="bg-[#f1f1f1] p-2.5 grow-0 shrink-0 basis-[auto] relative">
             <StyledLink href="/">Japan Stamp</StyledLink>
             <div className="float-none sm:float-right">
-                <StyledLink isActive={pathnameNoLang === "/"} href={"/" + lang}>{translations["map"]}</StyledLink>
+                <StyledLink isActive={pathnameNoLang === ""} href={"/" + lang}>{translations["map"]}</StyledLink>
                 <StyledLink isActive={pathnameNoLang === "/list"} href={"/" + lang + "/list"}>{translations["list"]}</StyledLink>
                 <StyledLink isActive={pathnameNoLang === "/add-stamp"} href={"/" + lang + "/add-stamp"}>{translations["add-stamp"]}</StyledLink>
                 <StyledLink isActive={pathnameNoLang === "/about"} href={"/" + lang + "/about"}>{translations["about"]}</StyledLink>
