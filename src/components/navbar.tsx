@@ -81,10 +81,12 @@ function ResponsiveNavbar({title, items, menuItems}: ResponsiveNavbarProps) {
         e.preventDefault();
     }
 
+    const itemElementClasses = isMenuShown ? "" : 'hidden sm:block';
+
     const titleElement = <NavbarLink href={title.href}>{title.value}</NavbarLink>
-    const itemElements = items.map(i => <NavbarLink href={i.href} key={i.href}>{i.value}</NavbarLink>);
+    const itemElements = items.map(i => <NavbarLink href={i.href} key={i.href} extraClasses={itemElementClasses}>{i.value}</NavbarLink>);
     const smallMenuItemElements = menuItems.map(i => <NavbarLink href={i.href} key={i.href} extraClasses='block sm:hidden'>{i.value}</NavbarLink>);
-    const largeMenuItemElements = <div className='hidden sm:flex absolute top-full right-0 z-50  flex-col bg-[#f1f1f1] float-none'>
+    const largeMenuItemElements = <div className='hidden sm:flex absolute top-full right-0 z-50 flex-col bg-[#f1f1f1] float-none'>
         {menuItems.map(i => <NavbarLink href={i.href} key={i.href}>{i.value}</NavbarLink>)}
     </div>
 
