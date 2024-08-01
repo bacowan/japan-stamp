@@ -37,7 +37,7 @@ interface NavbarLinkProps {
 }
 
 function NavbarLink({ children, isActive = false, href = "", onClick, extraClasses }: PropsWithChildren<NavbarLinkProps>) {
-    let className = "text-left sm:text-center p-4 no-underline text-lg rounded hover:bg-slate-400 ";
+    let className = "text-left sm:text-center p-4 no-underline text-lg rounded transition-all ease-in-out hover:text-xl duration-150 ";
     if (extraClasses) {
         className += extraClasses;
     }
@@ -86,12 +86,12 @@ function ResponsiveNavbar({title, items, menuItems}: ResponsiveNavbarProps) {
     const titleElement = <NavbarLink href={title.href}>{title.value}</NavbarLink>
     const itemElements = items.map(i => <NavbarLink href={i.href} key={i.href} extraClasses={itemElementClasses}>{i.value}</NavbarLink>);
     const smallMenuItemElements = menuItems.map(i => <NavbarLink href={i.href} key={i.href} extraClasses='block sm:hidden'>{i.value}</NavbarLink>);
-    const largeMenuItemElements = <div className='hidden sm:flex absolute top-full right-0 z-50 flex-col bg-[#f1f1f1] float-none'>
+    const largeMenuItemElements = <div className='hidden sm:flex absolute top-full right-0 z-50 flex-col bg-blue-950 text-white border-l border-b border-blue-600 float-none'>
         {menuItems.map(i => <NavbarLink href={i.href} key={i.href}>{i.value}</NavbarLink>)}
     </div>
 
     return <div className='relative'>
-        <div className="bg-[#f1f1f1] grow-0 shrink-0 basis-[auto] relative flex flex-col sm:flex-row"
+        <div className="bg-gradient-to-r from-blue-950 via-blue-800 to-blue-950 border-b border-blue-600 text-white grow-0 shrink-0 basis-[auto] relative flex flex-col sm:flex-row"
             onClick={e => {
                 if (e.target === e.currentTarget) {
                     setIsMenuShown(false);
