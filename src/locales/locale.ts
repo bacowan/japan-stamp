@@ -4,6 +4,7 @@ export default interface Locale {
     },
     "navbar": {
         "log-out": string,
+        "log-in": string,
         "map": string,
         "list": string,
         "add-stamp": string,

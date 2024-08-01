@@ -4,6 +4,7 @@ import Navbar from "@/components/navbar";
 import '@/app/ui/global.css';
 import LangMetaHandler from "./lang-meta-handler";
 import { getTranslations } from "@/utils/translation/translate";
+import Footer from "@/components/footer";
 
 export const metadata: Metadata = {
   title: "Create Next App",

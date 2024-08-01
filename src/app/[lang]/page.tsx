@@ -3,43 +3,6 @@ import PageClient from "./page-client";
 import { getTranslations } from "@/utils/translation/translate";
 import { MongoClient } from "mongodb";
 
-async function LoadPrefectureData(): Promise<{[name: string]: number}> {
-  return {}
-  // TODO: Don't do this through the REST API, do it directly since
-  // this is on the server anyways (and happens during build)
-  /*const response = await fetch(
-    process.env.NEXT_PUBLIC_API_URL + 'prefecture-stamps',
-    { cache: 'no-cache' }); // TODO: Add caching
-
-  if (response.ok) {
-    const asJson = await response.json();
-    
-    if (Array.isArray(asJson)) {
-      const ret: {[name: string]: number} = {};
-      for (let i = 0; i < asJson.length; i++) {
-        if ("name" in asJson[i] && "count" in asJson[i]) {
-          ret[asJson[i].name] = asJson[i].count;
-        }
-        else {
-          // TODO: Error handling
-          console.log("missing fields");
-          return {};
-        }
-      }
-      return ret;
-    }
-    else {
-      // TODO: Error handling
-    console.log("not array");
-      return {};
-    }
-  } else { 
-    // TODO: Error handling
-    console.log("response not okay");
-    return {};
-  }*/
-}
-
 function isLocation(input: any): input is {location: {coordinates: number[]}} {
   return Array.isArray(input.location.coordinates)
     && input.location.coordinates.length === 2

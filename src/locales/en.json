@@ -4,6 +4,7 @@
     },
     "navbar": {
         "log-out": "Log Out",
+        "log-in": "Log In",
         "map": "Map",
         "list": "List",
         "add-stamp": "Add Stamp",

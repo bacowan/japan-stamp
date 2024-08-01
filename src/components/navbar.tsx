@@ -1,31 +1,58 @@
 'use client'
 
 import { auth } from '../utils/firebase-init-client';
-import { MouseEventHandler, MutableRefObject, PropsWithChildren, useEffect, useState } from "react";
+import { MouseEventHandler, MutableRefObject, PropsWithChildren, RefObject, useEffect, useRef, useState } from "react";
 import { usePathname } from 'next/navigation';
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { FaUserCircle } from "react-icons/fa";
+import { FaUserCircle, FaBars } from "react-icons/fa";
 import { IconContext } from "react-icons";
 import useSignedIn from '@/utils/use-signed-in';
 import Locale from '@/locales/locale';
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 
 interface StyledLinkProps {
-    ref?: MutableRefObject<null>,
     isActive?: boolean,
     href?: string,
     onClick?: MouseEventHandler
 }
 
-function StyledLink({ children, isActive = false, href = "", onClick, ref }: PropsWithChildren<StyledLinkProps>) {
-    let className = "float-none text-left p-3 no-underline text-lg rounded block sm:float-left sm:text-center relative";
+function StyledLink({ children, isActive = false, href = "", onClick }: PropsWithChildren<StyledLinkProps>) {
+    let className = "float-none text-left p-3 no-underline text-lg rounded block relative sm:float-left sm:text-center";
     if (isActive) {
         className += " bg-blue-600 text-white hover:bg-blue-700"
     }
     else {
         className += " text-black hover:bg-slate-400"
     }
-    return <a href={href} className={className} onClick={onClick} ref={ref}>
+    return <a href={href} className={className} onClick={onClick}>
+        {children}
+    </a>
+};
+
+interface NavbarLinkProps {
+    isActive?: boolean,
+    href?: string,
+    onClick?: MouseEventHandler,
+    extraClasses?: string
+}
+
+function NavbarLink({ children, isActive = false, href = "", onClick, extraClasses }: PropsWithChildren<NavbarLinkProps>) {
+    let className = "text-left sm:text-center p-4 no-underline text-lg rounded hover:bg-slate-400 ";
+    if (extraClasses) {
+        className += extraClasses;
+    }
+    return <a className={className} href={href} onClick={onClick}>
+        {children}
+    </a>
+}
+
+interface SubMenuLinkProps {
+    onClick?: MouseEventHandler,
+    href?: string
+}
+
+function SubMenuLink({children, onClick, href = ""}: PropsWithChildren<SubMenuLinkProps>) {
+    return <a href={href} onClick={onClick} className='cursor-pointer p-2.5 block hover:bg-slate-400'>
         {children}
     </a>
 }
@@ -35,8 +62,55 @@ interface NavbarProps {
     lang: string
 }
 
+interface MenuItem {
+    value: any,
+    href?: string
+}
+
+interface ResponsiveNavbarProps {
+    title: MenuItem,
+    items: MenuItem[]
+    menuItems: MenuItem[],
+}
+
+function ResponsiveNavbar({title, items, menuItems}: ResponsiveNavbarProps) {
+    const [isMenuShown, setIsMenuShown] = useState(false);
+    
+    function onMenuClick(e: React.MouseEvent<HTMLElement>) {
+        setIsMenuShown(prev => !prev);
+        e.preventDefault();
+    }
+
+    const titleElement = <NavbarLink href={title.href}>{title.value}</NavbarLink>
+    const itemElements = items.map(i => <NavbarLink href={i.href} key={i.href}>{i.value}</NavbarLink>);
+    const smallMenuItemElements = menuItems.map(i => <NavbarLink href={i.href} key={i.href} extraClasses='block sm:hidden'>{i.value}</NavbarLink>);
+    const largeMenuItemElements = <div className='hidden sm:flex absolute top-full right-0 z-50  flex-col bg-[#f1f1f1] float-none'>
+        {menuItems.map(i => <NavbarLink href={i.href} key={i.href}>{i.value}</NavbarLink>)}
+    </div>
+
+    return <div className='relative'>
+        <div className="bg-[#f1f1f1] grow-0 shrink-0 basis-[auto] relative flex flex-col sm:flex-row"
+            onClick={e => {
+                if (e.target === e.currentTarget) {
+                    setIsMenuShown(false);
+                    e.preventDefault();
+                }
+            }}>
+            {titleElement}
+            <div className='ml-0 sm:ml-auto'></div>
+            {itemElements}
+            {isMenuShown && smallMenuItemElements}
+            <a href="#!" className='block p-4 absolute top-0 right-0 sm:relative sm:float-right hover:bg-slate-400' onClick={onMenuClick}>
+                <IconContext.Provider value={{ size: "1.75em" }}>
+                    <FaBars />
+                </IconContext.Provider>
+            </a>
+        </div>
+        {isMenuShown && largeMenuItemElements}
+    </div>
+}
+
 export default function Navbar({ translations, lang }: NavbarProps) {
-    const [isUserMenuShown, setIsUserMenuShown] = useState(false);
     const isSignedIn = useSignedIn();
     const pathname = usePathname();
     const pathnameNoLang = pathname.slice(lang.length + 1);
@@ -55,55 +129,83 @@ export default function Navbar({ translations, lang }: NavbarProps) {
         otherLang = "jp";
     }
 
-    function onUserLinkClick(e: React.MouseEvent<HTMLElement>) {
-        setIsUserMenuShown(prev => !prev);
-        e.preventDefault();
-    }
+    const title = {
+        href: "/" + lang,
+        value: "Japan Stamp"
+    };
+    const items = [
+        {
+            href: "/" + lang,
+            value: translations["map"]
+        },
+        {
+            href: "/" + lang + "/add-stamp",
+            value: translations["add-stamp"]
+        },
+        {
+            href: "/" + lang + "/about",
+            value: translations["about"]
+        }
+    ];
+    const menuItems = [
+        {
+            href: "/" + lang + "/login",
+            value: translations["log-in"]
+        },
+        {
+            href: "/" + otherLang + pathnameNoLang,
+            value: flagIcon
+        },
+    ]
+    return <ResponsiveNavbar
+        title={title}
+        items={items}
+        menuItems={menuItems}/>
 
-    let userMenu: JSX.Element;
-    if (isUserMenuShown) {
-        userMenu = <div className="absolute top-full right-0 z-50 flex flex-col bg-[#f1f1f1] float-none w-full sm:float-right sm:text-center sm:w-auto">
-            <a onClick={e => {
-                signOut(auth);
-                setIsUserMenuShown(false);
-                e.preventDefault();
-            }} className='cursor-pointer p-2.5 block hover:bg-slate-400'>
-                {translations["log-out"]}
+    /*return <>
+        <div className="bg-[#f1f1f1] grow-0 shrink-0 basis-[auto] relative">
+            <a className="float-none text-left p-4 no-underline text-lg rounded block relative sm:float-left" href={"/" + lang}>
+                Test
+            </a>
+            <a href="javascript:void(0);" className='block float-right p-4 absolute top-0 right-0 sm:relative sm:float-right' onClick={onMenuClick}>
+                <IconContext.Provider value={{ size: "1.75em" }}>
+                    <FaBars />
+                </IconContext.Provider>
+            </a>
+            <a className="float-none text-left p-4 no-underline text-lg rounded block relative sm:float-right" href={"/" + lang}>
+                {translations["map"]}
+            </a>
+            <a className="float-none text-left p-4 no-underline text-lg rounded block relative sm:float-right" href={"/" + lang}>
+                {translations["add-stamp"]}
+            </a>
+            <a className="float-none text-left p-4 no-underline text-lg rounded block relative sm:float-right" href={"/" + lang}>
+                {translations["about"]}
             </a>
         </div>
-    }
-    else {
-        userMenu = <></>
-    }
-    
-    let userLink: JSX.Element;
-    if (isSignedIn === true) {
-        userLink = <StyledLink onClick={onUserLinkClick}>
-                <IconContext.Provider value={{ size: "1.5em" }}>
-                    <FaUserCircle />
-                </IconContext.Provider>
-            </StyledLink>
-    }
-    else if (isSignedIn === false) {
-        userLink = <StyledLink isActive={pathnameNoLang === "/login"} href="login">Login</StyledLink>;
-    }
-    else {
-        userLink = <></>;
-    }
+    </>*/
 
-    return <>
-        <div className="bg-[#f1f1f1] p-2.5 grow-0 shrink-0 basis-[auto] relative">
+    /*return <>
+        <div className="bg-[#f1f1f1] p-2.5 grow-0 shrink-0 basis-[auto] relative"
+            onClick={e => {
+                if (e.target === e.currentTarget) {
+                    setIsMenuShown(false);
+                    e.preventDefault();
+                }
+            }}>
             <StyledLink href="/">Japan Stamp</StyledLink>
             <div className="float-none sm:float-right">
                 <StyledLink isActive={pathnameNoLang === ""} href={"/" + lang}>{translations["map"]}</StyledLink>
-                <StyledLink isActive={pathnameNoLang === "/list"} href={"/" + lang + "/list"}>{translations["list"]}</StyledLink>
+                {/*<StyledLink isActive={pathnameNoLang === "/list"} href={"/" + lang + "/list"}>{translations["list"]}</StyledLink>*//*}
                 <StyledLink isActive={pathnameNoLang === "/add-stamp"} href={"/" + lang + "/add-stamp"}>{translations["add-stamp"]}</StyledLink>
                 <StyledLink isActive={pathnameNoLang === "/about"} href={"/" + lang + "/about"}>{translations["about"]}</StyledLink>
-                {userLink}
-                <StyledLink isActive={false} href={"/" + otherLang + pathnameNoLang}>{flagIcon}</StyledLink>
+                <StyledLink onClick={onMenuClick}>
+                    <IconContext.Provider value={{ size: "1.5em" }}>
+                        <FaBars />
+                    </IconContext.Provider>
+                </StyledLink>
             </div>
-            {userMenu}
+            {menu}
         </div>
-        </>
+        </>*/
 }
 
