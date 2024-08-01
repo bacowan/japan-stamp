@@ -1,5 +1,13 @@
 @tailwind base;
 @tailwind components;
+
+/*.leaflet-layer,
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out,
+.leaflet-control-attribution {
+  @apply dark:brightness-[0.6] dark:invert dark:contrast-[3] dark:hue-rotate-[200deg] dark:saturate-[0.3];
+}*/
+
 @tailwind utilities;
 
 @layer utilities {

@@ -1,7 +1,8 @@
-import { Inter } from "next/font/google";
+import { Exo_2, M_PLUS_2 } from "next/font/google";
 import { usePathname } from "next/navigation";
 
-const inter = Inter({ subsets: ["latin"] });
+const english_font = Exo_2({ subsets: ["latin"] });
+const japanese_font = M_PLUS_2({ subsets: ["latin"]});
 
 export default function Layout({
   children
@@ -17,7 +18,7 @@ export default function Layout({
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
           crossOrigin=""/>
       </head>
-      <body className={inter.className}>
+      <body className={english_font.className + " " + japanese_font.className}>
         {children}
       </body>
     </html>
