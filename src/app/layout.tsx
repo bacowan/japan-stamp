@@ -1,3 +1,4 @@
+import '@/app/ui/global.css';
 import { Exo_2, M_PLUS_2 } from "next/font/google";
 import { usePathname } from "next/navigation";
 

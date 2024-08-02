@@ -8,6 +8,8 @@ import { textFromLang } from "@/utils/translation/extract-locale-text";
 import { useEffect, useState } from "react";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { storage } from "@/utils/firebase-init-client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const MapContainer = dynamic(() => import('react-leaflet').then((module) => module.MapContainer), { ssr: false });
 const Marker = dynamic(() => import('react-leaflet').then((module) => module.Marker), { ssr: false });
@@ -30,6 +32,7 @@ export interface StampPageClientParams {
   
 export default function PageClient({id, stamp, lang}: StampPageClientParams) {
   const [imageUrl, setImageUrl] = useState(""); // TODO: get placeholder image for default
+  const pathname = usePathname();
     
   useEffect(() => {
     (async function() {
@@ -54,7 +57,7 @@ export default function PageClient({id, stamp, lang}: StampPageClientParams) {
       <h1 className="text-center text-2xl">
         <span>{name}</span>
         <sup className="text-xs">
-          <a href="">Edit</a>
+          <Link href={pathname + "/edit"}>Edit</Link>
         </sup>
       </h1>
       <Image className="block mx-auto w-1/2 border border-white"

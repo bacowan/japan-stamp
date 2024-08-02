@@ -102,7 +102,7 @@ function ResponsiveNavbar({title, items, menuItems}: ResponsiveNavbarProps) {
             <div className='ml-0 sm:ml-auto'></div>
             {itemElements}
             {isMenuShown && smallMenuItemElements}
-            <a href="#!" className='block p-4 absolute top-0 right-0 sm:relative sm:float-right hover:bg-slate-400' onClick={onMenuClick}>
+            <a href="#!" className='block p-4 absolute top-0 right-0 sm:relative sm:float-right' onClick={onMenuClick}>
                 <IconContext.Provider value={{ size: "1.75em" }}>
                     <FaBars />
                 </IconContext.Provider>
@@ -139,6 +139,10 @@ export default function Navbar({ translations, lang }: NavbarProps) {
         {
             href: "/" + lang,
             value: translations["map"]
+        },
+        {
+            href: "/" + lang + "/list",
+            value: translations["list"]
         },
         {
             href: "/" + lang + "/add-stamp",
