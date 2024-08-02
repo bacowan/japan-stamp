@@ -33,13 +33,14 @@ export default function StampMapPopup({isOpen, stamp, lang}: StampMapPopupProps)
 
     useEffect(() => {
         if (isOpen && imageUrl !== null) {
-            setImage(<Image style={{maxWidth: "none"}} src={imageUrl} alt="hi" height={100} width={100}/>);
+            setImage(<Image src={imageUrl} alt="hi" height={100} width={100}
+                className="max-w-none border border-white"/>);
         }
     }, [isOpen, imageUrl]);
 
-    return <Popup>
+    return <Popup className="dark-popup">
         <Link href={"/stamp/" + stamp.id}>
-            <h3>{textFromLang(stamp.name, lang)}</h3>
+            <h3 className="text-white w-[100px] break-words">{textFromLang(stamp.name, lang)}</h3>
             {image}
         </Link>
     </Popup>

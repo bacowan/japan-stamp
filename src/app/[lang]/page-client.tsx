@@ -1,5 +1,6 @@
 'use client';
 
+import "leaflet/dist/leaflet.css";
 import StampMapPopup from "@/components/stamp-map-popup";
 import dynamic from "next/dynamic";
 import Script from "next/script";

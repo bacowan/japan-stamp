@@ -12,7 +12,19 @@
 .leaflet-control-zoom-in,
 .leaflet-control-zoom-out,
 .leaflet-control-attribution {
-  @apply brightness-[0.7] contrast-[3];
+  @apply brightness-[0.7] contrast-[3] blur-[0.25px];
+}
+
+.dark-popup.leaflet-popup .leaflet-popup-content-wrapper,
+.dark-popup.leaflet-popup .leaflet-popup-tip {
+  @apply bg-blue-900;
+}
+
+.dark-popup.leaflet-popup .leaflet-popup-close-button {
+  @apply text-white;
+}
+.dark-popup.leaflet-popup .leaflet-popup-close-button:hover {
+  @apply text-gray-200;
 }
 
 @tailwind utilities;
