@@ -214,7 +214,7 @@ export default function AddStampPage() {
     }
 
     return <div className='self-center w-3/4'>
-        <form className='rounded bg-slate-200 m-2 flex flex-col relative'>
+        <form className='rounded bg-blue-50 border border-blue-100 m-2 flex flex-col relative'>
             <div className='absolute top-0 right-0 flex flex-col p-1'>
                 {useLanguageCheckboxes}
             </div>

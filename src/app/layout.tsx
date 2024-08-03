@@ -19,7 +19,7 @@ export default function Layout({
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
           crossOrigin=""/>
       </head>
-      <body className={english_font.className + " " + japanese_font.className + " bg-blue-950 text-white"}>
+      <body className={english_font.className + " " + japanese_font.className + " "}>
         {children}
       </body>
     </html>

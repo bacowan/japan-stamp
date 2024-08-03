@@ -91,7 +91,7 @@ function ResponsiveNavbar({title, items, menuItems}: ResponsiveNavbarProps) {
     </div>
 
     return <div className='relative'>
-        <div className="bg-gradient-to-r from-blue-950 via-blue-800 to-blue-950 border-b border-blue-600 text-white grow-0 shrink-0 basis-[auto] relative flex flex-col sm:flex-row"
+        <div className="bg-gradient-to-r from-blue-950 via-blue-800 to-blue-950 border-b-2 border-blue-600 text-white grow-0 shrink-0 basis-[auto] relative flex flex-col sm:flex-row"
             onClick={e => {
                 if (e.target === e.currentTarget) {
                     setIsMenuShown(false);

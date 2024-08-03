@@ -60,30 +60,21 @@ export default function PageClient({id, stamp, lang}: StampPageClientParams) {
           <Link href={pathname + "/edit"}>Edit</Link>
         </sup>
       </h1>
-      <Image className="block mx-auto w-1/2 border border-white"
-        src={imageUrl} alt="hi" height={100} width={100}></Image>
-      <h2 className="text-center text-xl pt-2">
-        Location
-      </h2>
-      <MapContainer
+      <div className="flex flex-col sm:flex-row pt-4">
+        <Image className="block mx-auto w-3/5 sm:w-2/5 border border-white self-center"
+            src={imageUrl} alt="hi" height={100} width={100}></Image>
+        <MapContainer
           center={location}
           scrollWheelZoom={true}
           zoom={15}
-          style={{
-              "display": "block",
-              "marginLeft": "auto",
-              "marginRight": "auto",
-              "width": "80%",
-              "aspectRatio": "1/1",
-              "maxWidth": "30em",
-              "maxHeight": "30em"
-          }}>
+          className="block ml-auto mr-auto w-3/5 sm:w-2/5 mt-3 sm:mt-0 aspect-square">
           <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
           <Marker position={location}></Marker>
-      </MapContainer>
-      <h2 className="text-center text-xl pt-2">
+        </MapContainer>
+      </div>
+      <h2 className="text-center text-xl pt-4">
         Instructions
       </h2>
       <p>{description}</p>
