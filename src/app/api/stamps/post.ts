@@ -1,4 +1,4 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { ClientSession, MongoClient, ObjectId, TransactionOptions } from "mongodb";
 import { NextRequest } from "next/server";
 import { NextApiRequest } from "next";
 import { describe } from "node:test";
@@ -8,24 +8,26 @@ import { v4 as uuidv4 } from 'uuid';
 import { fileTypeFromBlob } from "file-type";
 import sharp from "sharp";
 import { auth } from "../../../utils/firebase-init-server";
-import { getStorage } from "firebase-admin/storage";
 import { Stamp } from "@/app/database-structure/stamp";
 import { isLocaleText, LocaleText } from "@/utils/translation/locale-text";
+import { Result } from "@/utils/Result";
+import validateUser from "@/utils/header-validation";
+import { prepareImageForUpload } from "./common";
+import { getStorage } from "firebase-admin/storage";
 
-const validFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
 
-function isLocation(input: any): input is Location {
+function isLocation(input: any): input is GeoLocation {
     return typeof input.lat === "number" && typeof input.lon === "number";
 }
 
-interface Location {
+interface GeoLocation {
     lat: number,
     lon: number
 }
 
 interface PostFields {
     name: LocaleText,
-    location: Location,
+    location: GeoLocation,
     description: LocaleText
 }
 
@@ -35,20 +37,15 @@ type ParsedForm = {
 };
 
 
-interface Success<T> {
-    type: "success"
-    value: T
-}
-
-interface Failure {
-    type: "failure",
-    message: string
-}
-
-type Result<T> = Success<T> | Failure;
-
 async function parseForm(request: Request): Promise<Result<ParsedForm>> {
     const formData = await request.formData();
+
+    if (Array.from(formData.keys()).some(k => !["name", "location", "description"].includes(k))) {
+        return {
+            type: "failure",
+            message: "extra form field was given"
+        }
+    }
 
     const nameString = formData.get("name");
     if (typeof nameString !== 'string' || nameString === null) {
@@ -118,83 +115,25 @@ async function parseForm(request: Request): Promise<Result<ParsedForm>> {
     }
 }
 
-async function prepareImageForUpload(image: File): Promise<Result<Buffer>> {
-    const fileType = await fileTypeFromBlob(image);
-    if (fileType && validFileTypes.includes(fileType.mime)) {
-        try {
-            const jpegBuffer = await sharp(await image.arrayBuffer())
-                .resize(200)
-                .jpeg({ quality: 80 })
-                .toBuffer();
-            return {
-                type: "success",
-                value: jpegBuffer
-            }
-        }
-        catch (e) {
-            return {
-                type: "failure",
-                message: "failed to format image"
-            }
-        }
+async function uploadDatabaseData(fields: PostFields, imagePath: string, dbPath: string, userId: string, client: MongoClient, session: ClientSession): Promise<string> {
+    const database = client.db('japan_stamp');
+    const collection = database.collection('stamps');
+    const createdOn = new Date();
+    const dataToWrite: Stamp = {
+        name: fields.name,
+        location: {
+            coordinates: [fields.location.lon, fields.location.lat],
+            type: "Point"
+        },
+        description: fields.description,
+        "image-path": imagePath,
+        "updated-by": userId,
+        "created-by": userId,
+        "updated-on": createdOn,
+        "created-on": createdOn
     }
-    else {
-        return {
-            type: "failure",
-            message: "invalid file type"
-        }
-    }
-}
-
-async function uploadImage(imagePath: string, image: Buffer): Promise<Result<null>> {
-    try {
-        const bucket = getStorage().bucket();
-        await bucket.file(imagePath).save(image);
-        return {
-            type: "success",
-            value: null
-        }
-    }
-    catch (e) {
-        return {
-            type: "failure",
-            message: e instanceof Error ? "Failed to upload image: " + e.message : "Failed to upload image"
-        }
-    }
-}
-
-async function uploadDatabaseData(fields: PostFields, imagePath: string, dbPath: string): Promise<Result<string>> {
-    const client = new MongoClient(dbPath);
-    try {
-        await client.connect();
-        const database = client.db('japan_stamp');
-        const collection = database.collection('stamps');
-        const dataToWrite: Stamp = {
-            name: fields.name,
-            location: {
-                coordinates: [fields.location.lon, fields.location.lat],
-                type: "Point"
-            },
-            description: fields.description,
-            "image-path": imagePath
-        }
-        const result = await collection.insertOne(dataToWrite);
-        return {
-            type: "success",
-            value: result.insertedId.toString()
-        }
-    }
-    catch (e) {
-        return {
-            type: "failure",
-            message: e instanceof Error ?
-                "Failed to upload database data: " + e.message
-                : "Failed to upload database data"
-        };
-    }
-    finally {
-        await client.close();
-    }
+    const result = await collection.insertOne(dataToWrite, { session });
+    return result.insertedId.toString()
 }
 
 async function undoDatabaseUpload(id: string, dbPath: string) {
@@ -207,30 +146,6 @@ async function undoDatabaseUpload(id: string, dbPath: string) {
     }
     finally {
         await client.close();
-    }
-}
-
-async function validateUser(headers: Headers): Promise<Result<string>> {
-    const authHeader = headers.get("Authorization");
-    if (authHeader === null) {
-        return {
-            type: "failure",
-            message: "Authorization header is required"
-        }
-    }
-    
-    try {
-        const decodedToken = await auth.verifyIdToken(authHeader);
-        return {
-            type: "success",
-            value: decodedToken.uid
-        }
-    }
-    catch (e) {
-        return {
-            type: "failure",
-            message: "Failed to authenticate: " + e
-        }
     }
 }
 
@@ -272,31 +187,45 @@ export default async function postRequest(request: Request) {
         );
     }
 
-    const imageId = uuidv4();
-    const imagePath = 'images/stamps/' + imageId + ".jpg";
-    const uploadedId = await uploadDatabaseData(formData.value.fields, imagePath, process.env.MONGODB_URI);
-    if (uploadedId.type === "failure") {
+    const client = new MongoClient(process.env.MONGODB_URI);
+    await client.connect();
+    const session = client.startSession();
+
+    const transactionOptions: TransactionOptions = {
+      readPreference: 'primary',
+      readConcern: { level: 'local' },
+      writeConcern: { w: 'majority', j: true }
+    };
+
+    try {
+        const mongodbUri = process.env.MONGODB_URI;
+        await session.withTransaction(async () => {
+            const imageId = uuidv4();
+            const imagePath = 'images/stamps/' + imageId + ".jpg";
+            const uploadedId = await uploadDatabaseData(formData.value.fields, imagePath, mongodbUri, validatedUser.value, client, session);
+        
+            const bucket = getStorage().bucket();
+            await bucket.file(imagePath).save(image.value);
+
+            return new Response(
+                JSON.stringify({ id: uploadedId }),
+                { status: 200 }
+            )
+        }, transactionOptions);
+    }
+    catch (e) {
         return new Response(
-            JSON.stringify({ error: uploadedId.message }),
+            JSON.stringify({ error: "Failed to upload data" }),
             {
                 status: 400
             }
         );
+    }
+    finally {
+        await session.endSession();
+        await client.close();
     }
 
-    const imageUploadResult = await uploadImage(imagePath, image.value);
-    if (imageUploadResult.type === "failure") {
-        await undoDatabaseUpload(uploadedId.value, process.env.MONGODB_URI);
-        return new Response(
-            JSON.stringify({ error: imageUploadResult.message }),
-            {
-                status: 400
-            }
-        );
-    }
     
-    return new Response(
-        JSON.stringify({ id: imageId }),
-        { status: 200 }
-    )
+    
 }

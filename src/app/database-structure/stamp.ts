@@ -18,5 +18,9 @@ export interface Stamp {
         type: "Point"
     },
     description: LocaleText,
-    "image-path": string
+    "image-path": string,
+    "created-by": string,
+    "updated-by": string,
+    "created-on": Date,
+    "updated-on": Date
 }
