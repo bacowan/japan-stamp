@@ -2,6 +2,7 @@ import { MongoClient, ObjectId } from "mongodb";
 import Script from 'next/script';
 import PageClient from './page-client';
 import { isStamp, Stamp } from "@/app/database-structure/stamp";
+import { notFound } from 'next/navigation';
 
 async function getStamp(id: string): Promise<Stamp | null> {
   if (process.env.MONGODB_URI) {
@@ -38,8 +39,11 @@ interface StampPageParams {
 }
 
 export default async function StampPage({ params }: { params: StampPageParams }) {
-
   const stamp = await getStamp(params.id);
+
+  if (stamp === null) {
+    notFound();
+  }
 
   return <main
     style={{

@@ -8,7 +8,15 @@ export function isStamp(input: any): input is Stamp {
         input.location.type === "Point" &&
         isLocaleText(input.description) &&
         "image-path" in input &&
-        typeof input["image-path"] === "string";
+        typeof input["image-path"] === "string" &&
+        "created-by" in input &&
+        typeof input["created-by"] === "string" &&
+        "updated-by" in input &&
+        typeof input["updated-by"] === "string" &&
+        "created-on" in input &&
+        input["created-on"] instanceof Date &&
+        "updated-on" in input &&
+        input["updated-on"] instanceof Date;
 }
 
 export interface Stamp {

@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import { Stamp } from "@/app/database-structure/stamp";
 import { textFromLang } from "@/utils/translation/extract-locale-text";
 import { useEffect, useState } from "react";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { ref, getDownloadURL } from "firebase/storage";
 import { storage } from "@/utils/firebase-init-client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -25,7 +25,7 @@ export type TodoResponse = {
 
 export interface StampPageClientParams {
     id: string,
-    stamp: Stamp | null,
+    stamp: Stamp,
     lang: string
   }
 
@@ -36,20 +36,18 @@ export default function PageClient({id, stamp, lang}: StampPageClientParams) {
     
   useEffect(() => {
     (async function() {
-      if (stamp !== null) {
-        try {
-            setImageUrl(await getDownloadURL(ref(storage, stamp["image-path"]))); // TODO: Use react cache
-        }
-        catch {
-            // TODO: Logging
-        }
+      try {
+          setImageUrl(await getDownloadURL(ref(storage, stamp["image-path"]))); // TODO: Use react cache
+      }
+      catch {
+          // TODO: Logging
       }
     })();
   }, [stamp]);
   
-  const name = stamp === null ? "" : textFromLang(stamp.name, lang);
-  const description = stamp === null ? "" : textFromLang(stamp.description, lang);
-  const location: LatLngExpression = stamp === null || stamp.location.coordinates.length !== 2
+  const name = textFromLang(stamp.name, lang);
+  const description = textFromLang(stamp.description, lang);
+  const location: LatLngExpression = stamp.location.coordinates.length !== 2
     ? [35.6764, 139.6500]
     : [stamp.location.coordinates[1], stamp.location.coordinates[0]];
 
