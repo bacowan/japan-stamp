@@ -12,7 +12,7 @@ import { Stamp } from "@/app/database-structure/stamp";
 import { isLocaleText, LocaleText } from "@/utils/translation/locale-text";
 import { Result } from "@/utils/Result";
 import validateUser from "@/utils/header-validation";
-import { prepareImageForUpload } from "./common";
+import { prepareImageForUpload } from "../common";
 import { getStorage } from "firebase-admin/storage";
 
 

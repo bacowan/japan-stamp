@@ -16,6 +16,7 @@ interface GeoLocation {
 }
 
 interface PostFields {
+    stampId: string,
     name?: LocaleText,
     location?: GeoLocation,
     description?: LocaleText
@@ -29,10 +30,18 @@ type ParsedForm = {
 async function parseForm(request: Request): Promise<Result<ParsedForm>> {
     const formData = await request.formData();
 
-    if (Array.from(formData.keys()).some(k => !["name", "location", "description"].includes(k))) {
+    if (Array.from(formData.keys()).some(k => !["name", "location", "description", "stamp_id"].includes(k))) {
         return {
             type: "failure",
             message: "extra form field was given"
+        }
+    }
+
+    const stampId = formData.get("stamp_id");
+    if (stampId === null || typeof stampId !== 'string') {
+        return {
+            type: "failure",
+            message: "stamp_id not supplied correctly"
         }
     }
 
@@ -96,6 +105,7 @@ async function parseForm(request: Request): Promise<Result<ParsedForm>> {
             type: "success",
             value: {
                 fields: {
+                    stampId: stampId,
                     name: name,
                     location: location,
                     description: description
@@ -112,10 +122,16 @@ async function parseForm(request: Request): Promise<Result<ParsedForm>> {
     }
 }
 
-async function uploadDatabaseData(stampId: string, fields: PostFields, newImagePath: string | undefined, dbPath: string, userId: string, client: MongoClient, session: ClientSession): Promise<void> {
+async function uploadDatabaseData(fields: PostFields, newImagePath: string | undefined, userId: string, client: MongoClient, session: ClientSession): Promise<void> {
     const database = client.db('japan_stamp');
-    const collection = database.collection('stamps');
+    const collection = database.collection('stamps_change_requests');
+
+    if (await collection.countDocuments(new ObjectId(fields.stampId), { limit: 1, session }) === 0) {
+        throw Error("Given stamp does not exist");
+    }
+
     const setFields: { [key: string]: any } = {
+        "stamp-id": fields.stampId,
         "updated-on": new Date(),
         "updated-by": userId
     };
@@ -134,16 +150,10 @@ async function uploadDatabaseData(stampId: string, fields: PostFields, newImageP
     if (newImagePath !== undefined) {
         setFields["image-path"] = newImagePath;
     }
-    const result = await collection.findOneAndUpdate(
-        new ObjectId(stampId),
-        {
-            $set: setFields,
-            session
-        }
-    );
+    await collection.insertOne(setFields, { session });
 }
 
-export default async function patchRequest(request: Request, stampId: string) {
+export default async function postRequest(request: Request) {
     if (process.env.MONGODB_URI === undefined) {
         return new Response(
             JSON.stringify({ error: "The server has been incorrectly configured" }),
@@ -201,9 +211,8 @@ export default async function patchRequest(request: Request, stampId: string) {
     };
 
     try {
-        const mongodbUri = process.env.MONGODB_URI;
         await session.withTransaction(async () => {
-            await uploadDatabaseData(stampId, formData.value.fields, newImagePath, mongodbUri, validatedUser.value, client, session);
+            await uploadDatabaseData(formData.value.fields, newImagePath, validatedUser.value, client, session);
             if (image !== undefined && newImagePath !== undefined) {
                 const bucket = getStorage().bucket();
                 await bucket.file(newImagePath).save(image);
