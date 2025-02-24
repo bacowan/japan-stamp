@@ -1,7 +1,8 @@
 export default interface Stamp {
-    _id: String,
-    name: String,
-    description: String,
+    _id: string,
+    name: string,
+    description: string,
     location: [number, number],
-    image_url: String
+    image_url: string,
+    image_alt: string
 }
