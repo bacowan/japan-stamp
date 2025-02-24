@@ -9,12 +9,11 @@ interface NextRequestWithGeo extends NextRequest {
 }
 
 export function middleware(request: NextRequestWithGeo) {
-  const country = request.geo?.country;
-  console.log(request);
+  const country = request.headers.get("x-vercel-ip-country");
   const response = NextResponse.next();
-  response.headers.set('x-country', "test");
+
   if (country) {
-    response.headers.set('x-country', country); // Pass country as a custom header
+    response.headers.set('x-country', country);
   }
 
   return response;
