@@ -20,8 +20,7 @@ export default async function Home() {
       name: s.name,
       description: s.description,
       location: s.location,
-      image_url: s.image_url,
-      image_alt: s.image_alt
+      image_url: s.image_url
     }))
     .map(s => <StampCard key={s._id.toString()} stamp={s}/>);
 

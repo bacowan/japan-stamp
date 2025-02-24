@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { hostname } from "os";
 
 const nextConfig: NextConfig = {
   images: {
@@ -9,9 +10,21 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/150x150.png',
         search: '',
-      },
+      }
     ],
   },
 };
+
+if (process.env.SUPABASE_URL && process.env.SUPABASE_FILE_PATH) {
+  const supabaseUrl = new URL(process.env.SUPABASE_URL);
+  const supabasePattern = {
+    protocol: supabaseUrl.protocol === "https:" ? "https" : "http" as "https" | "http",
+    hostname: supabaseUrl.hostname,
+    port: supabaseUrl.port,
+    pathname: process.env.SUPABASE_FILE_PATH,
+    search: ''
+  };
+  nextConfig.images?.remotePatterns?.push(supabasePattern);
+}
 
 export default nextConfig;
