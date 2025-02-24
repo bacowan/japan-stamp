@@ -2,9 +2,9 @@ import Stamp from "@/database/collection_types/stamp";
 import { MongoClient } from "mongodb";
 import StampCard from "./components/stamp-card";
 
-const mongodbClient = process.env.MONGODB_CONNECTION_STRING === undefined
+const mongodbClient = process.env.MONGODB_URI === undefined
   ? null
-  : new MongoClient(process.env.MONGODB_CONNECTION_STRING);
+  : new MongoClient(process.env.MONGODB_URI);
 
 export default async function Home() {
   if (!mongodbClient) {
