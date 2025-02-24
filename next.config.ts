@@ -26,5 +26,11 @@ if (process.env.SUPABASE_URL && process.env.SUPABASE_FILE_PATH) {
   };
   nextConfig.images?.remotePatterns?.push(supabasePattern);
 }
+else if (!process.env.SUPABASE_URL) {
+  throw "SUPABASE_URL is not configured";
+}
+else {
+  throw "SUPABASE_FILE_PATH is not configured";
+}
 
 export default nextConfig;
