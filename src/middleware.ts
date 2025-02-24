@@ -10,6 +10,7 @@ interface NextRequestWithGeo extends NextRequest {
 
 export function middleware(request: NextRequestWithGeo) {
   const country = request.geo?.country;
+  console.log(request);
   const response = NextResponse.next();
 
   if (country) {
