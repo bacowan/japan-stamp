@@ -1,8 +1,8 @@
 'use client'
 
-import Stamp from "@/database/collection_types/stamp";
+//import Stamp from "@/database/collection_types/stamp";
 import Image from 'next/image';
-import haversine from 'haversine-distance';
+//import haversine from 'haversine-distance';
 
 export interface StampCardParams {
     name: string,
@@ -10,7 +10,7 @@ export interface StampCardParams {
     id: string
 }
 
-export default function StampCard({ name, image_url, id }: StampCardParams ) {
+export default function StampCard({ name, image_url }: StampCardParams ) {
     //const distance = haversine()
 
     return <div className="border rounded-lg m-3 flex flex-row">
