@@ -1,5 +1,4 @@
 export default interface Stamp {
-    _id: string,
     name: string,
     description: string,
     location: [number, number],
