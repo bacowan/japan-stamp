@@ -1,5 +1,4 @@
 import type { NextConfig } from "next";
-import { hostname } from "os";
 
 const nextConfig: NextConfig = {
   images: {
@@ -26,11 +25,10 @@ if (process.env.SUPABASE_URL && process.env.SUPABASE_FILE_PATH) {
   };
   nextConfig.images?.remotePatterns?.push(supabasePattern);
 }
-else if (!process.env.SUPABASE_URL) {
-  throw "SUPABASE_URL is not configured";
-}
 else {
-  throw "SUPABASE_FILE_PATH is not configured";
+  console.error(`SUPABASE_URL: ${process.env.SUPABASE_URL}`);
+  console.error(`SUPABASE_FILE_PATH: ${process.env.SUPABASE_FILE_PATH}`);
+  throw "environment variables not correctly configured";
 }
 
 export default nextConfig;
