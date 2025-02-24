@@ -1,5 +1,3 @@
-import { ObjectId } from "mongodb";
-
 export default interface Stamp {
     _id: String,
     name: String,

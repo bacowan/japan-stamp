@@ -1,5 +1,4 @@
 import Stamp from "@/database/collection_types/stamp"
-import { WithId } from "mongodb"
 
 export interface StampCardParams {
     stamp: Stamp
