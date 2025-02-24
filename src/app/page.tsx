@@ -1,12 +1,17 @@
 import Stamp from "@/database/collection_types/stamp";
 import { MongoClient } from "mongodb";
 import StampCard from "./components/stamp-card";
+import { stampListPageFlag } from "../../flags";
 
 const mongodbClient = process.env.MONGODB_URI === undefined
   ? null
   : new MongoClient(process.env.MONGODB_URI);
 
 export default async function Home() {
+  if (!await stampListPageFlag()) {
+    return <div>Coming soon</div>
+  }
+
   if (!mongodbClient) {
     throw "Could not connect to database";
   }
