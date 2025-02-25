@@ -4,6 +4,7 @@ import Image from 'next/image';
 import haversine from 'haversine-distance';
 import StampValue from '@/database/value_types/stampValue';
 import { JSX } from 'react';
+import Link from 'next/link';
 
 export interface StampCardParams {
     stamp: StampValue,
@@ -31,7 +32,7 @@ export default function StampCard({ stamp, userLocation }: StampCardParams ) {
         distanceElement = <p>{readableDistance(distance)}</p>
     }
 
-    return <div className="border rounded-lg m-3 flex flex-row">
+    return <Link className="border rounded-lg m-3 flex flex-row" href={"/stamp/" + stamp.id}>
         <Image src={stamp.image_url}
             alt="Stamp image"
             width={150} height={150}
@@ -40,5 +41,5 @@ export default function StampCard({ stamp, userLocation }: StampCardParams ) {
             <h3 className="text-xl">{stamp.name}</h3>
             {distanceElement}
         </div>
-    </div>
+    </Link>
 }
