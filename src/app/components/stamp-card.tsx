@@ -5,9 +5,11 @@ import Image from 'next/image';
 //import haversine from 'haversine-distance';
 
 export interface StampCardParams {
+    id: string,
     name: string,
     image_url: string,
-    id: string
+    lat: number,
+    lon: number
 }
 
 export default function StampCard({ name, image_url }: StampCardParams ) {

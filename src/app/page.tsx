@@ -23,15 +23,14 @@ export default async function Home() {
   const collection = database.collection<Stamp>('Stamps');
   const stampsArray = await collection.find().toArray();
   const stampCards = stampsArray
-    .map(s => ({
-      id: s._id.toString(),
-      name: s.name,
-      description: s.description,
-      lat: s.location[1],
-      lon: s.location[0],
-      image_url: s.image_url
-    }))
-    .map(s => <StampCard key={s.id} name={s.name} image_url={s.image_url} id={s.id}/>);
+    .map(s => <StampCard
+      key={s._id.toString()}
+      id={s._id.toString()}
+      name={s.name}
+      image_url={s.image_url}
+      lon={+s.location[0].toString()}
+      lat={+s.location[1].toString()}/>
+    );
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
