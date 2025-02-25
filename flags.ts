@@ -6,3 +6,10 @@ export const stampListPageFlag = flag({
     return !!process.env.FEATURE_FLAG_STAMPS_PAGE;
   },
 });
+
+export const forceJpFlag = flag({
+  key: 'force-jp',
+  decide() {
+    return !!process.env.FEATURE_FLAG_FORCE_JP;
+  },
+});
