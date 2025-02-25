@@ -1,5 +1,4 @@
 import { MongoClient } from "mongodb";
-import StampCard from "./components/stamp-card";
 import { stampListPageFlag, forceJpFlag } from "../../flags";
 import { headers } from "next/headers";
 import { StampResultsWithLocation } from "./components/stamp-results-with-location";
