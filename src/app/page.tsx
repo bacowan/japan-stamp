@@ -5,21 +5,18 @@ import { StampResultsWithLocation } from "./components/stamp-results-with-locati
 import { StampResults } from "./components/stamp-results";
 import StampValue from "@/database/value_types/stampValue";
 import Stamp from "@/database/database_types/stamp";
-
-const mongodbClient = process.env.MONGODB_URI === undefined
-  ? null
-  : new MongoClient(process.env.MONGODB_URI);
+import mongodb_client from "@/database/mongodb_client";
 
 export default async function Home() {
   if (!await stampListPageFlag()) {
     return <div>Coming soon</div>
   }
 
-  if (!mongodbClient) {
+  if (!mongodb_client) {
     throw "Could not connect to database";
   }
   
-  const database = mongodbClient.db('JapanStamp');
+  const database = mongodb_client.db('JapanStamp');
   const collection = database.collection<Stamp>('Stamps');
   const stampsArray = await collection.find().toArray();
   const stampCards = stampsArray
