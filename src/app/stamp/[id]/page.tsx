@@ -26,7 +26,7 @@ export default async function StampPage({ params }: StampPageParams)  {
     return <div className="flex flex-col items-center">
         <h1 className="text-4xl text-center">{stamp.name}</h1>
         <h2 className="text-xl text-center p-3">Stamp Preview</h2>
-        <Image src="https://placehold.jp/150x150.png" width={500} height={500} alt="picture"
+        <Image src={stamp.image_url} width={500} height={500} alt="picture"
             className="w-full max-w-2xl"/>
         <h2 className="text-xl text-center p-3">Map</h2>
         <Image src="https://placehold.jp/150x150.png" width={500} height={500} alt="map"
