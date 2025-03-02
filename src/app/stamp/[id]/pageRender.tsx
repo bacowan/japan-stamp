@@ -2,11 +2,17 @@
 
 import StampDto from "@/database/dtos/stampDto";
 import useLeaflet from "@/hooks/use-leaflet";
+import dynamic from "next/dynamic";
 import Image from "next/image";
+import { MapContainer } from 'react-leaflet/MapContainer'
+import { TileLayer } from 'react-leaflet/TileLayer'
+import { useMap } from 'react-leaflet/hooks'
 
 interface StampRenderProps {
     stamp: StampDto
 }
+
+const DynamicMap = dynamic(() => import("./components/stamp-page-map"), { ssr: false });
 
 export default function StampPageRender({ stamp }: StampRenderProps) {
     useLeaflet();
@@ -16,8 +22,7 @@ export default function StampPageRender({ stamp }: StampRenderProps) {
         <Image src={stamp.image_url} width={500} height={500} alt="picture"
             className="w-full max-w-2xl"/>
         <h2 className="text-xl text-center p-3">Map</h2>
-        <Image src="https://placehold.jp/150x150.png" width={500} height={500} alt="map"
-            className="w-full max-w-2xl"/>
+        <DynamicMap stamp={stamp}/>
         <h2 className="text-xl text-center p-3">Details</h2>
         <p className="pl-3 pr-3 pb-3">{stamp.description}</p>
     </div>);
