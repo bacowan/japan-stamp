@@ -2,12 +2,12 @@
 
 import Image from 'next/image';
 import haversine from 'haversine-distance';
-import StampValue from '@/database/value_types/stampValue';
+import StampDto from '@/database/dtos/stampDto';
 import { JSX } from 'react';
 import Link from 'next/link';
 
 export interface StampCardParams {
-    stamp: StampValue,
+    stamp: StampDto,
     userLocation?: { lat: number, lon: number };
 }
 

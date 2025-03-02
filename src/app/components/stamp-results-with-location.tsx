@@ -1,11 +1,11 @@
 'use client'
 
-import StampValue from "@/database/value_types/stampValue"
+import StampDto from "@/database/dtos/stampDto"
 import { useEffect, useState } from "react";
 import { StampResults } from "./stamp-results";
 
 interface StampResultsWithLocationParams {
-    stamps: StampValue[]
+    stamps: StampDto[]
 }
 
 export function StampResultsWithLocation({ stamps }: StampResultsWithLocationParams) {
