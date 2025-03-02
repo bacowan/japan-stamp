@@ -20,7 +20,7 @@ export default function StampPageRender({ stamp }: StampRenderProps) {
         <h1 className="text-4xl text-center">{stamp.name}</h1>
         <h2 className="text-xl text-center p-3">Stamp Preview</h2>
         <Image src={stamp.image_url} width={500} height={500} alt="picture"
-            className="w-full max-w-2xl"/>
+            className="w-full max-w-2xl p-2"/>
         <h2 className="text-xl text-center p-3">Map</h2>
         <DynamicMap stamp={stamp}/>
         <h2 className="text-xl text-center p-3">Details</h2>

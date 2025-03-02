@@ -6,18 +6,14 @@ interface StampPageMapProps {
 }
 
 export default function StampPageMap({ stamp }: StampPageMapProps) {
-    return (
+    return (<div className="w-full p-2 flex flex-col items-center">
         <MapContainer center={[stamp.lat, stamp.lon]} zoom={13} scrollWheelZoom={false}
-            style={{"width": "500px", "height": "500px"}}>
+            className="w-full max-w-2xl aspect-square">
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <Marker position={[stamp.lat, stamp.lon]}>
-                <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable.
-                </Popup>
-            </Marker>
+            <Marker position={[stamp.lat, stamp.lon]}/>
         </MapContainer>
-    )
+    </div>)
 }
