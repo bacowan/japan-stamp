@@ -12,7 +12,16 @@ interface StampRenderProps {
     stamp: StampDto
 }
 
-const DynamicMap = dynamic(() => import("./components/stamp-page-map"), { ssr: false });
+const DynamicMap = dynamic(
+    () => import("./components/stamp-page-map"),
+    {
+        ssr: false,
+        loading: () => {
+            return <div className="w-full max-w-2xl aspect-square flex justify-center items-center">
+                Loading...
+            </div>
+        }
+    });
 
 export default function StampPageRender({ stamp }: StampRenderProps) {
     useLeaflet();

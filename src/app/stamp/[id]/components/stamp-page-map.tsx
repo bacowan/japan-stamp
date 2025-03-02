@@ -1,5 +1,5 @@
 import StampDto from "@/database/dtos/stampDto";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
 
 interface StampPageMapProps {
     stamp: StampDto
