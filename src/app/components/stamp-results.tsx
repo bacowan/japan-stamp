@@ -1,10 +1,10 @@
 'use client'
 
-import StampValue from "@/database/value_types/stampValue";
+import StampDto from "@/database/dtos/stampDto";
 import StampCard from "./stamp-card";
 
 interface StampResultsParams {
-    stamps: StampValue[],
+    stamps: StampDto[],
     userLocation?: { lat: number, lon: number };
 }
 
