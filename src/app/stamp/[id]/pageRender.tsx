@@ -4,9 +4,6 @@ import StampDto from "@/database/dtos/stampDto";
 import useLeaflet from "@/hooks/use-leaflet";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { MapContainer } from 'react-leaflet/MapContainer'
-import { TileLayer } from 'react-leaflet/TileLayer'
-import { useMap } from 'react-leaflet/hooks'
 
 interface StampRenderProps {
     stamp: StampDto
