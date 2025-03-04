@@ -13,7 +13,6 @@ export default async function StampPage({ params }: StampPageParams)  {
     if (!mongodb_client) {
         throw "Could not connect to database";
     }
-
     const id = (await params).id;
 
     const database = mongodb_client.db('JapanStamp');
