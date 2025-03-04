@@ -8,7 +8,8 @@ export function StampMongoToDto(mongoStamp: WithId<Stamp>): StampDto {
         description: mongoStamp.description,
         image_url: mongoStamp.image_url,
         lon: +mongoStamp.location[0].toString(),
-        lat: +mongoStamp.location[1].toString()
+        lat: +mongoStamp.location[1].toString(),
+        last_updated: mongoStamp.last_updated
     }
 }
 
@@ -18,5 +19,6 @@ export default interface StampDto {
     description: string,
     image_url: string,
     lon: number,
-    lat: number
+    lat: number,
+    last_updated: Date
 }
