@@ -49,7 +49,7 @@ export function StampResults({ stamps, userLocation }: StampResultsParams) {
         Sort by:
         <select className="ml-1" value={selectedSortOption} onChange={onSortOptionChanged}>
           <option value="date">Date Added</option>
-          <option value="nearby">Nearby</option>
+          { userLocation !== undefined && <option value="nearby">Nearby</option> }
         </select>
       </label>
     </div>
