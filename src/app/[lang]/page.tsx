@@ -1,4 +1,4 @@
-import { stampListPageFlag, forceJpFlag } from "../../flags";
+import { stampListPageFlag, forceJpFlag } from "../../../flags";
 import { headers } from "next/headers";
 import { StampResultsWithLocation } from "./components/stamp-results-with-location";
 import { StampResults } from "./components/stamp-results";

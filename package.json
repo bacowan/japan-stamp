@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@formatjs/intl-localematcher": "^0.6.0",
     "flags": "^3.1.1",
     "haversine-distance": "^1.2.3",
     "leaflet": "^1.9.4",
     "mongodb": "6.13",
+    "negotiator": "^1.0.0",
     "next": "15.1.7",
     "react": "^19.0.0-rc.1",
     "react-dom": "^19.0.0-rc.1",
@@ -21,6 +23,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@types/leaflet": "^1.9.16",
+    "@types/negotiator": "^0.6.3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
