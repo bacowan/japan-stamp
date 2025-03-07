@@ -19,3 +19,22 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.policy {
+  @apply m-4
+}
+
+.policy h1 {
+  @apply text-3xl mt-3 mb-3
+}
+
+.policy h2 {
+  @apply text-xl mt-2 mb-3
+}
+
+.policy h3 {
+  @apply text-lg mt-2 mb-3
+}
+.policy p {
+  @apply ml-4
+}
