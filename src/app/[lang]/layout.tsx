@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/app/components/navbar";
+import Navbar from "@/app/[lang]/components/navbar";
 import Footer from "./components/footer";
 
 const geistSans = Geist({
@@ -19,10 +19,12 @@ export const metadata: Metadata = {
   description: "Find eki-stamps in Japan",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode,
+  params: Promise<{ lang: 'en-US' | 'ja' }>
 }>) {
   return (
     <html lang="en" className="h-screen">
@@ -30,7 +32,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased
           bg-background text-text dark:bg-darkBackground dark:text-darkText
           h-full flex flex-col`}>
-        <Navbar/>
+        <Navbar lang={(await params).lang}/>
         <div className="grow">
           {children}
         </div>

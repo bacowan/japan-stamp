@@ -1,4 +1,4 @@
-import { stampListPageFlag, forceJpFlag } from "../../flags";
+import { stampListPageFlag, forceJpFlag } from "../../../flags";
 import { headers } from "next/headers";
 import { StampResultsWithLocation } from "./components/stamp-results-with-location";
 import { StampResults } from "./components/stamp-results";
@@ -9,7 +9,8 @@ import { Filter, Sort } from "mongodb";
 import parseLatLonUrl from "./utils/parse-lat-lon-url";
 
 interface HomeParams {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>,
+  lang: 'en-US' | 'ja'
 }
 
 function firstParam(param: string | string[] | undefined): string {
