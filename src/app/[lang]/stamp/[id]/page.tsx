@@ -4,9 +4,10 @@ import { ObjectId } from "mongodb";
 import { notFound } from "next/navigation";
 import StampPageRender from "./pageRender";
 import { StampMongoToDto } from "@/database/dtos/stampDto";
+import { getDictionary } from "@/localization/dictionaries";
 
 interface StampPageParams {
-    params: Promise<{ id: string }>
+    params: Promise<{ id: string, lang: 'en-US' | 'ja' }>
 }
 
 export default async function StampPage({ params }: StampPageParams)  {
@@ -22,6 +23,9 @@ export default async function StampPage({ params }: StampPageParams)  {
     if (stamp === null) {
         notFound();
     }
+    
+    const resolvedParams = await params;
+    const dictionary = await getDictionary(resolvedParams.lang);
 
-    return <StampPageRender stamp={StampMongoToDto(stamp)}/>
+    return <StampPageRender stamp={StampMongoToDto(stamp)} dictionary={dictionary["stamp-page"]}/>
 }

@@ -5,13 +5,17 @@ import StampCard from "./stamp-card";
 import { ChangeEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import parseLatLonUrl from "../utils/parse-lat-lon-url";
+import Dictionary from "@/localization/dictionaries/dictionary";
+import { SupportedLocale } from "@/localization/localization";
 
 interface StampResultsParams {
     stamps: StampDto[],
-    userLocation?: { lat: number, lon: number };
+    userLocation?: { lat: number, lon: number },
+    dictionary: Dictionary["stamp-list"],
+    locale: SupportedLocale
 }
 
-export function StampResults({ stamps, userLocation }: StampResultsParams) {
+export function StampResults({ stamps, userLocation, dictionary, locale }: StampResultsParams) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -44,17 +48,17 @@ export function StampResults({ stamps, userLocation }: StampResultsParams) {
 
   return <>
     <div className="w-full flex flex-col items-center">
-      <h2 className="text-xl">Stamps near you</h2>
+      <h2 className="text-xl">{dictionary["near-you-header"]}</h2>
       <label>
-        Sort by:
+        {dictionary["sort-by"]}
         <select className="ml-1" value={selectedSortOption} onChange={onSortOptionChanged}>
-          <option value="date">Date Added</option>
-          { userLocation !== undefined && <option value="nearby">Nearby</option> }
+          <option value="date">{dictionary["date-added-sort"]}</option>
+          { userLocation !== undefined && <option value="nearby">{dictionary["nearby-sort"]}</option> }
         </select>
       </label>
     </div>
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 grow">
-        {stamps.map(s => <StampCard key={s.id} stamp={s} userLocation={userLocation}/>)}
+        {stamps.map(s => <StampCard key={s.id} stamp={s} userLocation={userLocation} locale={locale}/>)}
     </div>
   </>
 }

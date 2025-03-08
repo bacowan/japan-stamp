@@ -1,4 +1,4 @@
-import { stampListPageFlag, forceJpFlag } from "../../flags";
+import { stampListPageFlag, forceJpFlag } from "../../../flags";
 import { headers } from "next/headers";
 import { StampResultsWithLocation } from "./components/stamp-results-with-location";
 import { StampResults } from "./components/stamp-results";
@@ -7,9 +7,11 @@ import Stamp from "@/database/database_types/stamp";
 import mongodb_client from "@/database/mongodb_client";
 import { Filter, Sort } from "mongodb";
 import parseLatLonUrl from "./utils/parse-lat-lon-url";
+import { getDictionary } from "@/localization/dictionaries";
 
 interface HomeParams {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>,
+  params: Promise<{ lang: 'en-US' | 'ja' }>
 }
 
 function firstParam(param: string | string[] | undefined): string {
@@ -24,7 +26,10 @@ function firstParam(param: string | string[] | undefined): string {
   }
 }
 
-export default async function Home({ searchParams }: HomeParams) {
+export default async function Home({ searchParams, params }: Readonly<HomeParams>) {
+  const resolvedParams = await params;
+  const dictionary = await getDictionary(resolvedParams.lang);
+
   if (!await stampListPageFlag()) {
     return <div>Coming soon</div>
   }
@@ -73,9 +78,9 @@ export default async function Home({ searchParams }: HomeParams) {
   const country = (await headers()).get('x-country') || 'unknown';
 
   if (country === 'JP' || await forceJpFlag()) {
-    return <StampResultsWithLocation stamps={stampCards}/>
+    return <StampResultsWithLocation stamps={stampCards} dictionary={dictionary["stamp-list"]} locale={resolvedParams.lang}/>
   }
   else {
-    return <StampResults stamps={stampCards}/>
+    return <StampResults stamps={stampCards} dictionary={dictionary["stamp-list"]} locale={resolvedParams.lang}/>
   }
 }

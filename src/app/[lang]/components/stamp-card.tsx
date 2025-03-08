@@ -5,10 +5,13 @@ import haversine from 'haversine-distance';
 import StampDto from '@/database/dtos/stampDto';
 import { JSX } from 'react';
 import Link from 'next/link';
+import localizeHref from '../utils/localize-href';
+import { SupportedLocale } from '@/localization/localization';
 
 export interface StampCardParams {
     stamp: StampDto,
     userLocation?: { lat: number, lon: number };
+    locale: SupportedLocale
 }
 
 const readableDistance = (meters: number): string => {
@@ -23,7 +26,7 @@ const readableDistance = (meters: number): string => {
     }
 }
 
-export default function StampCard({ stamp, userLocation }: StampCardParams ) {
+export default function StampCard({ stamp, userLocation, locale }: StampCardParams ) {
     let distanceElement: JSX.Element | undefined;
     if (userLocation) {
         const distance = haversine(
@@ -32,7 +35,7 @@ export default function StampCard({ stamp, userLocation }: StampCardParams ) {
         distanceElement = <p>{readableDistance(distance)}</p>
     }
 
-    return <Link className="border rounded-lg m-3 flex flex-row" href={"/stamp/" + stamp.id}>
+    return <Link className="border rounded-lg m-3 flex flex-row" href={localizeHref(locale, "/stamp/" + stamp.id)}>
         <Image src={stamp.image_url}
             alt="Stamp image"
             width={150} height={150}
