@@ -1,0 +1,21 @@
+{
+    "common": {
+        "loading": "ローディング、、、",
+        "en-US": "英語",
+        "jp": "日本語"
+    },
+    "navbar": {
+        "log-out": "ログアウト",
+        "log-in": "ログイン",
+        "map": "マップ",
+        "list": "リスト",
+        "add-stamp": "スタンプを作る",
+        "about": "ウェブサイトについて"
+    },
+    "stamp-list": {
+        "near-you-header": "この辺りのスタンプ",
+        "sort-by": "順番",
+        "date-added-sort": "最近",
+        "nearby-sort": "近い"
+    }
+}

@@ -3,23 +3,25 @@
 import Link from "next/link"
 import { TbLanguageHiragana } from "react-icons/tb";
 import NavbarItem from "./navbar-item";
-import { SupportedLocale } from "@/localization";
+import { SupportedLocale } from "@/localization/localization";
 import { usePathname, useSearchParams } from "next/navigation";
+import Dictionary from "@/localization/dictionaries/dictionary";
 
 interface NavbarParams {
-    lang: SupportedLocale
+    lang: SupportedLocale,
+    dictionary: Dictionary["navbar"] & Dictionary["common"]
 }
 
-export default function Navbar({ lang }: NavbarParams) {
+export default function Navbar({ lang, dictionary }: NavbarParams) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const languageMenuItems = [
-        { name: "English", lang: "en-US" },
-        { name: "Japanese", lang: "ja" }
+        { name: dictionary["en-US"], lang: "en-US" },
+        { name: dictionary.jp, lang: "ja" }
     ].map(l =>
         <Link
             key={l.lang}
-            className="cursor-pointer"
+            className="cursor-pointer whitespace-nowrap"
             href={`/${l.lang}${pathname.slice(lang.length + 1)}?${searchParams.toString()}`}>
                 {l.name}
         </Link>);

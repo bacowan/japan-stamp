@@ -1,0 +1,21 @@
+{
+    "common": {
+        "loading": "Loading...",
+        "en-US": "English",
+        "jp": "Japanese"
+    },
+    "navbar": {
+        "log-out": "Log Out",
+        "log-in": "Log In",
+        "map": "Map",
+        "list": "List",
+        "add-stamp": "Add Stamp",
+        "about": "About"
+    },
+    "stamp-list": {
+        "near-you-header": "Stamps near you",
+        "sort-by": "Sort by:",
+        "date-added-sort": "Date Added",
+        "nearby-sort": "Nearby"
+    }
+}

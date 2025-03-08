@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/app/[lang]/components/navbar";
 import Footer from "./components/footer";
+import { getDictionary } from "@/localization/dictionaries";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,13 +27,15 @@ export default async function RootLayout({
   children: React.ReactNode,
   params: Promise<{ lang: 'en-US' | 'ja' }>
 }>) {
+  const resolvedParams = await params;
+  const dictionary = await getDictionary(resolvedParams.lang);
   return (
     <html lang="en" className="h-screen">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased
           bg-background text-text dark:bg-darkBackground dark:text-darkText
           h-full flex flex-col`}>
-        <Navbar lang={(await params).lang}/>
+        <Navbar lang={(await params).lang} dictionary={{ ...dictionary["navbar"], ...dictionary["common"] }}/>
         <div className="grow">
           {children}
         </div>

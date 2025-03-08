@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { match } from '@formatjs/intl-localematcher'
 import Negotiator from 'negotiator';
-import { supportedLocales } from './localization';
+import { supportedLocales } from './localization/localization';
 
 // Extend NextRequest to include `geo`
 interface NextRequestWithGeo extends NextRequest {

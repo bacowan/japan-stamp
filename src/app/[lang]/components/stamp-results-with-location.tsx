@@ -3,12 +3,14 @@
 import StampDto from "@/database/dtos/stampDto"
 import { useEffect, useState } from "react";
 import { StampResults } from "./stamp-results";
+import Dictionary from "@/localization/dictionaries/dictionary";
 
 interface StampResultsWithLocationParams {
-    stamps: StampDto[]
+    stamps: StampDto[],
+    dictionary: Dictionary["stamp-list"]
 }
 
-export function StampResultsWithLocation({ stamps }: StampResultsWithLocationParams) {
+export function StampResultsWithLocation({ stamps, dictionary }: StampResultsWithLocationParams) {
     const [userLocation, setUserLocation] = useState<{lat: number, lon: number} | null>(null);
 
     useEffect(() => {
@@ -25,5 +27,5 @@ export function StampResultsWithLocation({ stamps }: StampResultsWithLocationPar
         }
     }, []);
 
-    return <StampResults stamps={stamps} userLocation={userLocation ?? undefined}/>
+    return <StampResults stamps={stamps} userLocation={userLocation ?? undefined} dictionary={dictionary}/>
 }
