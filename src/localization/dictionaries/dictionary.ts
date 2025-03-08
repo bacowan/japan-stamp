@@ -27,5 +27,9 @@ export default interface Dictionary {
         "stamp-preview": string,
         "map": string,
         "details": string
+    },
+    "about-page": {
+        "about-header": string,
+        
     }
 }

@@ -30,7 +30,9 @@ export default function Navbar({ lang, dictionary }: NavbarParams) {
     return <nav className="border-b border-border text-primary">
         <ul className="flex flex-row h-10 items-stretch">
             <NavbarItem>
-                <Link href={localizeHref(lang, "/")} className="flex flex-row items-center pr-3 pl-3 h-full"><span>Japan Stamp</span></Link>
+                <Link href={localizeHref(lang, "/")} className="flex flex-row items-center pr-3 pl-3 h-full">
+                    ekistamp.net
+                </Link>
             </NavbarItem>
             <div className="grow"></div>
             <NavbarItem menuItems={languageMenuItems}>
