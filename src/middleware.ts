@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { match } from '@formatjs/intl-localematcher'
 import Negotiator from 'negotiator';
+import { supportedLocales } from './localization';
 
 // Extend NextRequest to include `geo`
 interface NextRequestWithGeo extends NextRequest {
@@ -9,8 +10,6 @@ interface NextRequestWithGeo extends NextRequest {
     country?: string;
   };
 }
-
-const locales = ['en-US', 'ja'];
 
 function setCountry(request: NextRequestWithGeo, response: NextResponse) {
   const country = request.headers.get("x-vercel-ip-country");
@@ -25,7 +24,7 @@ function getLocale(request: NextRequestWithGeo) {
   }}).languages();
   let defaultLocale = 'en-US'
    
-  return match(languages, locales, defaultLocale)
+  return match(languages, supportedLocales, defaultLocale)
 }
 
 export function middleware(request: NextRequestWithGeo) {
@@ -33,7 +32,7 @@ export function middleware(request: NextRequestWithGeo) {
   setCountry(request, response);
 
   const url = request.nextUrl.pathname;
-  const pathnameHasLocale = locales.some(
+  const pathnameHasLocale = supportedLocales.some(
     (locale) => url.startsWith(`/${locale}/`) || url === `/${locale}`
   );
   if (pathnameHasLocale) return response;

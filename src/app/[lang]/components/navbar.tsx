@@ -1,17 +1,38 @@
+'use client'
+
 import Link from "next/link"
-import LangIcon from "./lang-icon"
 import { TbLanguageHiragana } from "react-icons/tb";
+import NavbarItem from "./navbar-item";
+import { SupportedLocale } from "@/localization";
+import { usePathname, useSearchParams } from "next/navigation";
 
 interface NavbarParams {
-    lang: 'en-US' | 'ja'
+    lang: SupportedLocale
 }
 
 export default function Navbar({ lang }: NavbarParams) {
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const languageMenuItems = [
+        { name: "English", lang: "en-US" },
+        { name: "Japanese", lang: "ja" }
+    ].map(l =>
+        <Link
+            key={l.lang}
+            className="cursor-pointer"
+            href={`/${l.lang}${pathname.slice(lang.length + 1)}?${searchParams.toString()}`}>
+                {l.name}
+        </Link>);
+
     return <nav className="border-b border-border text-primary">
         <ul className="flex flex-row h-10 items-stretch">
-            <li><Link href="/" className="block flex flex-row items-center pr-3 pl-3"><span>Japan Stamp</span></Link></li>
+            <NavbarItem>
+                <Link href="/" className="flex flex-row items-center pr-3 pl-3 h-full"><span>Japan Stamp</span></Link>
+            </NavbarItem>
             <div className="grow"></div>
-            <li className="cursor-pointer h-full"><TbLanguageHiragana className="mr-3 ml-3"/></li>
+            <NavbarItem menuItems={languageMenuItems}>
+                <TbLanguageHiragana className="mr-3 ml-3 h-full"/>
+            </NavbarItem>
         </ul>
     </nav>
 }
