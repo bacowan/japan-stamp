@@ -17,5 +17,10 @@ export default interface Dictionary {
         "sort-by": string,
         "date-added-sort": string,
         "nearby-sort": string
+    },
+    "stamp-page": {
+        "stamp-preview": string,
+        "map": string,
+        "details": string
     }
 }

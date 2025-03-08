@@ -17,5 +17,10 @@
         "sort-by": "Sort by:",
         "date-added-sort": "Date Added",
         "nearby-sort": "Nearby"
+    },
+    "stamp-page": {
+        "stamp-preview": "Stamp Preview",
+        "map": "Map",
+        "details": "Details"
     }
 }

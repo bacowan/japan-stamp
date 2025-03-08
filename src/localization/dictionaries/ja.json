@@ -17,5 +17,10 @@
         "sort-by": "順番",
         "date-added-sort": "最近",
         "nearby-sort": "近い"
+    },
+    "stamp-page": {
+        "stamp-preview": "写真",
+        "map": "地図",
+        "details": "詳細"
     }
 }
