@@ -12,6 +12,11 @@
         "add-stamp": "スタンプを作る",
         "about": "ウェブサイトについて"
     },
+    "footer": {
+        "about": "ekistampについて",
+        "privacy-policy": "プライバシーに関する方針",
+        "github": "Github"
+    },
     "stamp-list": {
         "near-you-header": "この辺りのスタンプ",
         "sort-by": "順番",

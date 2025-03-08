@@ -78,9 +78,9 @@ export default async function Home({ searchParams, params }: Readonly<HomeParams
   const country = (await headers()).get('x-country') || 'unknown';
 
   if (country === 'JP' || await forceJpFlag()) {
-    return <StampResultsWithLocation stamps={stampCards} dictionary={dictionary["stamp-list"]}/>
+    return <StampResultsWithLocation stamps={stampCards} dictionary={dictionary["stamp-list"]} locale={resolvedParams.lang}/>
   }
   else {
-    return <StampResults stamps={stampCards} dictionary={dictionary["stamp-list"]}/>
+    return <StampResults stamps={stampCards} dictionary={dictionary["stamp-list"]} locale={resolvedParams.lang}/>
   }
 }

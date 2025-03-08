@@ -12,6 +12,11 @@
         "add-stamp": "Add Stamp",
         "about": "About"
     },
+    "footer": {
+        "about": "About",
+        "privacy-policy": "Privacy Policy",
+        "github": "Github"
+    },
     "stamp-list": {
         "near-you-header": "Stamps near you",
         "sort-by": "Sort by:",

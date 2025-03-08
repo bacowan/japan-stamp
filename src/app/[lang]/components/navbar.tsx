@@ -6,6 +6,7 @@ import NavbarItem from "./navbar-item";
 import { SupportedLocale } from "@/localization/localization";
 import { usePathname, useSearchParams } from "next/navigation";
 import Dictionary from "@/localization/dictionaries/dictionary";
+import localizeHref from "../utils/localize-href";
 
 interface NavbarParams {
     lang: SupportedLocale,
@@ -29,7 +30,7 @@ export default function Navbar({ lang, dictionary }: NavbarParams) {
     return <nav className="border-b border-border text-primary">
         <ul className="flex flex-row h-10 items-stretch">
             <NavbarItem>
-                <Link href="/" className="flex flex-row items-center pr-3 pl-3 h-full"><span>Japan Stamp</span></Link>
+                <Link href={localizeHref(lang, "/")} className="flex flex-row items-center pr-3 pl-3 h-full"><span>Japan Stamp</span></Link>
             </NavbarItem>
             <div className="grow"></div>
             <NavbarItem menuItems={languageMenuItems}>

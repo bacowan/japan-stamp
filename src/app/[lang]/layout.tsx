@@ -39,7 +39,7 @@ export default async function RootLayout({
         <div className="grow">
           {children}
         </div>
-        <Footer/>
+        <Footer dictionary={dictionary["footer"]} locale={resolvedParams.lang}/>
       </body>
     </html>
   );

@@ -12,6 +12,11 @@ export default interface Dictionary {
         "add-stamp": string,
         "about": string
     },
+    "footer": {
+        "about": string,
+        "privacy-policy": string,
+        "github": string
+    },
     "stamp-list": {
         "near-you-header": string,
         "sort-by": string,
