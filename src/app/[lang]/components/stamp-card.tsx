@@ -7,6 +7,7 @@ import { JSX } from 'react';
 import Link from 'next/link';
 import localizeHref from '../utils/localize-href';
 import { SupportedLocale } from '@/localization/localization';
+import getLocalizedText from '../utils/get-localized-text';
 
 export interface StampCardParams {
     stamp: StampDto,
@@ -41,7 +42,7 @@ export default function StampCard({ stamp, userLocation, locale }: StampCardPara
             width={150} height={150}
             className="p-1"/>
         <div className="p-2">
-            <h3 className="text-xl">{stamp.name}</h3>
+            <h3 className="text-xl">{getLocalizedText(stamp.name, locale)}</h3>
             {distanceElement}
         </div>
     </Link>

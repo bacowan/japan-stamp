@@ -1,5 +1,6 @@
 import { WithId } from "mongodb"
 import Stamp from "../database_types/stamp"
+import { LocalizedText } from "../database_types/localized-text"
 
 export function StampMongoToDto(mongoStamp: WithId<Stamp>): StampDto {
     return {
@@ -15,8 +16,8 @@ export function StampMongoToDto(mongoStamp: WithId<Stamp>): StampDto {
 
 export default interface StampDto {
     id: string,
-    name: string,
-    description: string,
+    name: LocalizedText,
+    description: LocalizedText,
     image_url: string,
     lon: number,
     lat: number,
