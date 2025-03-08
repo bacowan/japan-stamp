@@ -27,5 +27,5 @@ export default async function StampPage({ params }: StampPageParams)  {
     const resolvedParams = await params;
     const dictionary = await getDictionary(resolvedParams.lang);
 
-    return <StampPageRender stamp={StampMongoToDto(stamp)} dictionary={dictionary["stamp-page"]}/>
+    return <StampPageRender stamp={StampMongoToDto(stamp)} dictionary={dictionary["stamp-page"]} locale={resolvedParams.lang}/>
 }
