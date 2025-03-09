@@ -7,6 +7,7 @@ import { SupportedLocale } from "@/localization/localization";
 import { usePathname, useSearchParams } from "next/navigation";
 import Dictionary from "@/localization/dictionaries/dictionary";
 import localizeHref from "../utils/localize-href";
+import { stampListPageFlag } from "../../../../flags";
 
 interface NavbarParams {
     lang: SupportedLocale,
