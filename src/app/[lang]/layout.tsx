@@ -5,6 +5,8 @@ import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 import { getDictionary } from "@/localization/dictionaries";
 import { VercelToolbar } from "@vercel/toolbar/next";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,7 +41,9 @@ export default async function RootLayout({
           h-full flex flex-col`}>
         <Navbar lang={(await params).lang} dictionary={{ ...dictionary["navbar"], ...dictionary["common"] }}/>
         <div className="grow">
-          {children}
+          <Suspense fallback={<Loading/>}>
+              {children}
+          </Suspense>
         </div>
         {shouldInjectToolbar && <VercelToolbar />}
         <Footer dictionary={dictionary["footer"]} locale={resolvedParams.lang}/>
