@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 import { getDictionary } from "@/localization/dictionaries";
+import { VercelToolbar } from "@vercel/toolbar/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +28,7 @@ export default async function RootLayout({
   children: React.ReactNode,
   params: Promise<{ lang: 'en-US' | 'ja' }>
 }>) {
+  const shouldInjectToolbar = process.env.NODE_ENV === 'development';
   const resolvedParams = await params;
   const dictionary = await getDictionary(resolvedParams.lang);
   return (
@@ -39,6 +41,7 @@ export default async function RootLayout({
         <div className="grow">
           {children}
         </div>
+        {shouldInjectToolbar && <VercelToolbar />}
         <Footer dictionary={dictionary["footer"]} locale={resolvedParams.lang}/>
       </body>
     </html>
