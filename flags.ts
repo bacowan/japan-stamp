@@ -6,10 +6,3 @@ export const stampListPageFlag = flag({
     return false;
   },
 });
-
-export const forceJpFlag = flag({
-  key: 'force-jp',
-  decide() {
-    return false;
-  },
-});
