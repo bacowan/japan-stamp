@@ -43,5 +43,5 @@ export function middleware(request: NextRequestWithGeo) {
  
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+  matcher: '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\.well-known).*)',
 }
