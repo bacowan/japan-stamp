@@ -35,6 +35,27 @@ body {
 .policy h3 {
   @apply text-lg mt-2 mb-3
 }
+
 .policy p {
   @apply ml-4
+}
+
+.about {
+  @apply m-4
+}
+
+.about h1 {
+  @apply text-center text-4xl pb-4
+}
+
+.about h2 {
+  @apply text-2xl p-2
+}
+
+.about p {
+  @apply -indent-4 pl-12
+}
+
+.about ul {
+  @apply list-disc ml-20
 }

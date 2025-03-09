@@ -10,8 +10,8 @@ interface FooterParams {
 
 export default function Footer({ dictionary, locale }: FooterParams) {
     return <footer className="border-t border-border text-primary flex flex-row">
-        <a className="flex-grow text-center p-1">{dictionary["about"]}</a>
+        <Link href={localizeHref(locale, "/about")} className="flex-grow text-center p-1">{dictionary["about"]}</Link>
         <Link href={localizeHref(locale, "/privacy-policy")} className="flex-grow text-center p-1">{dictionary["privacy-policy"]}</Link>
-        <a className="flex-grow text-center p-1">{dictionary["github"]}</a>
+        <Link href="https://github.com/bacowan/japan-stamp" className="flex-grow text-center p-1">{dictionary["github"]}</Link>
     </footer>
 }
