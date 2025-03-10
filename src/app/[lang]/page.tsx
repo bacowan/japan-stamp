@@ -1,4 +1,4 @@
-import { stampListPageFlag } from "../../../flags";
+import { stampListPageFlag, forceJpFlag } from "../../../flags";
 import { headers } from "next/headers";
 import { StampResultsWithLocation } from "./components/stamp-results-with-location";
 import { StampResults } from "./components/stamp-results";
@@ -77,7 +77,7 @@ export default async function Home({ searchParams, params }: Readonly<HomeParams
   
   const country = (await headers()).get('x-country') || 'unknown';
 
-  if (country === 'JP') {
+  if (country === 'JP' || await forceJpFlag()) {
     return <StampResultsWithLocation stamps={stampCards} dictionary={dictionary["stamp-list"]} locale={resolvedParams.lang}/>
   }
   else {

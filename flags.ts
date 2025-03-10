@@ -7,6 +7,13 @@ export const stampListPageFlag = flag({
   },
 });
  
+export const forceJpFlag = flag({
+  key: 'stamp-list-page',
+  decide() {
+    return !!process.env.FEATURE_FLAG_FORCE_JP;
+  },
+});
+ 
 export const mapPageFlag = flag({
   key: 'stamp-list-page',
   decide() {

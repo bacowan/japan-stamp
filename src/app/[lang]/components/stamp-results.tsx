@@ -51,7 +51,7 @@ export function StampResults({ stamps, userLocation, dictionary, locale }: Stamp
       <h2 className="text-xl">{dictionary["near-you-header"]}</h2>
       <label>
         {dictionary["sort-by"]}
-        <select className="ml-1" value={selectedSortOption} onChange={onSortOptionChanged}>
+        <select className="ml-1 text-black border" value={selectedSortOption} onChange={onSortOptionChanged}>
           <option value="date">{dictionary["date-added-sort"]}</option>
           { userLocation !== undefined && <option value="nearby">{dictionary["nearby-sort"]}</option> }
         </select>

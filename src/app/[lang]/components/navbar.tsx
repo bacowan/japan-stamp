@@ -24,14 +24,15 @@ export default function Navbar({ lang, dictionary }: NavbarParams) {
         <Link
             key={l.lang}
             className="cursor-pointer whitespace-nowrap"
-            href={`/${l.lang}${pathname.slice(lang.length + 1)}?${searchParams.toString()}`}>
+            href={`/${l.lang}${pathname.slice(lang.length + 1)}?${searchParams.toString()}`}
+            prefetch={false}>
                 {l.name}
         </Link>);
 
     return <nav className="border-b border-border text-primary">
         <ul className="flex flex-row h-10 items-stretch">
             <NavbarItem>
-                <Link href={localizeHref(lang, "/")} className="flex flex-row items-center pr-3 pl-3 h-full">
+                <Link href={localizeHref(lang, "/")} className="flex flex-row items-center pr-3 pl-3 h-full" prefetch={false}>
                     ekistamp.net
                 </Link>
             </NavbarItem>
