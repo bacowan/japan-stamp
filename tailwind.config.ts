@@ -12,6 +12,7 @@ export default {
         primary: "#4A90E2", // Soft blue
         secondary: "#50C878", // Warm green
         background: "#FFFFFF", // White
+        backgroundHover: "#EEEEEE",
         text: "#333333", // Dark gray
         muted: "#666666", // Lighter gray for secondary text
         border: "#CCCCCC", // Light gray for borders
@@ -20,6 +21,7 @@ export default {
 
         // Dark mode colors
         darkBackground: "#1A1A1A", // Dark mode background
+        darkBackgroundHover: "#171717",
         darkText: "#E0E0E0", // Light gray text for dark mode
         darkMuted: "#A0A0A0", // Muted text in dark mode
         darkBorder: "#333333", // Borders in dark mode

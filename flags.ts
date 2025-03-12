@@ -15,7 +15,7 @@ export const forceJpFlag = flag({
 });
  
 export const mapPageFlag = flag({
-  key: 'stamp-list-page',
+  key: 'map-page',
   decide() {
     return !!process.env.FEATURE_FLAG_MAP_PAGE;
   },
