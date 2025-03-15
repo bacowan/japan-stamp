@@ -48,9 +48,12 @@ export default function Navbar({ lang, dictionary, showMapHeader }: NavbarParams
                 ekistamp.net
             </Link>
             <div className="grow"></div>
-            <Link href={localizeHref(lang, "/map")} className={"sm:flex flex-row items-center pr-3 pl-3 h-10 hover:bg-backgroundHover hover:dark:bg-darkBackgroundHover " + (isMenuOpen ? "flex" : "hidden")} prefetch={false}>
-                Map
-            </Link>
+            {
+                showMapHeader &&
+                <Link href={localizeHref(lang, "/map")} className={"sm:flex flex-row items-center pr-3 pl-3 h-10 hover:bg-backgroundHover hover:dark:bg-darkBackgroundHover " + (isMenuOpen ? "flex" : "hidden")} prefetch={false}>
+                    Map
+                </Link>
+            }
             <div className={"cursor-pointer pr-3 pl-3 h-10 sm:flex flex-row items-center hover:bg-backgroundHover hover:dark:bg-darkBackgroundHover " + (isMenuOpen ? "flex" : "hidden")}
                     onClick={onLanguageClick}>
                 <TbLanguageHiragana/>
