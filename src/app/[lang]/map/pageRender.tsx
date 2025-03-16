@@ -24,7 +24,11 @@ const DynamicMap = dynamic(
         loading: () => <MapLoadingComponent/>
     });
 
-export default function MapPageRender() {
+interface MapPageRenderProps {
+    heatmapPoints: { lat: number, lon: number, weight: number }[]
+}
+
+export default function MapPageRender({ heatmapPoints }: MapPageRenderProps) {
     useLeaflet();
     const [initialMapViewValues, setInitialMapViewValues] = useState<MapViewValues | null>(null);
     const [loadedStampsByLocation, setLoadedStampsByLocation] = useState<{[key: string]: StampDto[]}>({});
@@ -84,6 +88,8 @@ export default function MapPageRender() {
         return <DynamicMap
             initialMapViewValues={initialMapViewValues}
             onMapViewChanged={onMapViewValuesChanged}
-            stamps={loadedStamps}/>
+            stamps={loadedStamps}
+            heatmapPoints={heatmapPoints}
+            />
     }
 }

@@ -1,6 +1,21 @@
 import StampDto from "@/database/dtos/stampDto";
 import { Map } from "leaflet";
+import dynamic from "next/dynamic";
+import { AiOutlineLoading } from "react-icons/ai";
 import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
+
+function MapLoadingComponent() {
+    return <div className="w-full h-full flex justify-center items-center">
+        <AiOutlineLoading className="animate-spin"/>
+    </div>; 
+}
+
+const DynamicHeatmap = dynamic(
+    () => import("./heatmap"),
+    {
+        ssr: false,
+        loading: () => <MapLoadingComponent/>
+    });
 
 interface MapEventWrapperProps {
     onMapViewChanged: (e: MapViewValues) => void
@@ -32,7 +47,8 @@ function MapEventWrapper({ onMapViewChanged }: MapEventWrapperProps) {
 interface StampPageMapProps {
     initialMapViewValues: MapViewValues,
     onMapViewChanged: (e: MapViewValues) => void,
-    stamps: StampDto[]
+    stamps: StampDto[],
+    heatmapPoints: { lat: number, lon: number, weight: number }[]
 }
 
 export interface MapViewValues {
@@ -40,7 +56,7 @@ export interface MapViewValues {
     zoom: number
 }
 
-export default function MapPageMap({ initialMapViewValues, onMapViewChanged, stamps }: StampPageMapProps) {
+export default function MapPageMap({ initialMapViewValues, onMapViewChanged, stamps, heatmapPoints }: StampPageMapProps) {
     const stampMarkers = stamps.map(s => <Marker key={s.id} position={[s.lat, s.lon]}/>);
     return (<div className="w-full h-full p-2 flex flex-col items-center">
         <MapContainer center={[initialMapViewValues.center.lat, initialMapViewValues.center.lon]} zoom={initialMapViewValues.zoom} scrollWheelZoom={false}
@@ -51,6 +67,7 @@ export default function MapPageMap({ initialMapViewValues, onMapViewChanged, sta
             />
             {stampMarkers}
             <MapEventWrapper onMapViewChanged={onMapViewChanged}/>
+            <DynamicHeatmap points={heatmapPoints}/>
         </MapContainer>
     </div>)
 }
