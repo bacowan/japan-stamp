@@ -28,6 +28,8 @@ interface MapPageRenderProps {
     heatmapPoints: { lat: number, lon: number, weight: number }[]
 }
 
+const zoomCutoff = parseInt(process.env.NEXT_PUBLIC_MAP_ZOOM_DETAIL_CUTOFF ?? "");
+
 export default function MapPageRender({ heatmapPoints }: MapPageRenderProps) {
     useLeaflet();
     const [initialMapViewValues, setInitialMapViewValues] = useState<MapViewValues | null>(null);
@@ -37,6 +39,8 @@ export default function MapPageRender({ heatmapPoints }: MapPageRenderProps) {
     const loadedStamps = Object.values(loadedStampsByLocation).flatMap(s => s);
 
     async function onMapViewValuesChanged(mapViewValues: MapViewValues) {
+        if (mapViewValues.zoom < zoomCutoff) return;
+        
         const lat = Math.floor(mapViewValues.center.lat);
         const lon = Math.floor(mapViewValues.center.lon);
         const latLon = `${lat},${lon}`;
