@@ -13,3 +13,10 @@ export const forceJpFlag = flag({
     return !!process.env.FEATURE_FLAG_FORCE_JP;
   },
 });
+ 
+export const mapPageFlag = flag({
+  key: 'map-page',
+  decide() {
+    return !!process.env.FEATURE_FLAG_MAP_PAGE;
+  },
+});

@@ -5,15 +5,18 @@ import { notFound } from "next/navigation";
 import StampPageRender from "./pageRender";
 import { StampMongoToDto } from "@/database/dtos/stampDto";
 import { getDictionary } from "@/localization/dictionaries";
+import { SupportedLocale } from "@/localization/localization";
 
 interface StampPageParams {
-    params: Promise<{ id: string, lang: 'en-US' | 'ja' }>
+    params: Promise<{ id: string, lang: SupportedLocale }>
 }
 
 export default async function StampPage({ params }: StampPageParams)  {
     if (!mongodb_client) {
         throw "Could not connect to database";
     }
+    
+    const resolvedParams = await params;
     const id = (await params).id;
 
     const database = mongodb_client.db('JapanStamp');
@@ -24,7 +27,6 @@ export default async function StampPage({ params }: StampPageParams)  {
         notFound();
     }
     
-    const resolvedParams = await params;
     const dictionary = await getDictionary(resolvedParams.lang);
 
     return <StampPageRender stamp={StampMongoToDto(stamp)} dictionary={dictionary["stamp-page"]} locale={resolvedParams.lang}/>
