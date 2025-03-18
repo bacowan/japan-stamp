@@ -39,10 +39,10 @@ function getMapViewValues(map: Map): MapViewValues {
 
 function MapEventWrapper({ onMapViewChanged }: MapEventWrapperProps) {
     const map = useMapEvents({
-        zoomend: e => {
+        zoomend: () => {
             onMapViewChanged(getMapViewValues(map));
         },
-        moveend: e => {
+        moveend: () => {
             onMapViewChanged(getMapViewValues(map));
         }
     });

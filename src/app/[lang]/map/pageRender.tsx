@@ -4,7 +4,6 @@ import useLeaflet from "@/hooks/use-leaflet"
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
-import { useMapEvent } from "react-leaflet";
 import { MapViewValues } from "./components/map-page-map";
 import StampDto from "@/database/dtos/stampDto";
 import GetStampsForLatLonSquare from "./functions/getMarkers";
@@ -69,7 +68,7 @@ export default function MapPageRender({ heatmapPoints, locale }: MapPageRenderPr
         });
     }
 
-    function onGetCurrentPositionError(err: GeolocationPositionError) {
+    function onGetCurrentPositionError() {
         setInitialMapViewValues({
             center: tokyoLatLon,
             zoom: 14
