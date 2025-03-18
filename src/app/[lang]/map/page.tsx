@@ -2,15 +2,18 @@ import Stamp from "@/database/database_types/stamp";
 import MapPageRender from "./pageRender"
 import mongodb_client from "@/database/mongodb_client";
 import { Document } from "mongodb";
+import { SupportedLocale } from "@/localization/localization";
 
 interface MapPageParams {
-    params: Promise<{ id: string, lang: 'en-US' | 'ja' }>
+    params: Promise<{ lang: SupportedLocale }>
 }
 
 export default async function MapPage({ params }: MapPageParams) {
     if (!mongodb_client) {
         throw "Could not connect to database";
     }
+
+    const resolvedParams = await params;
 
     const aggregationPipeline: Document[] = [
         {
@@ -40,5 +43,5 @@ export default async function MapPage({ params }: MapPageParams) {
         weight: d.weight
     }));
 
-    return <MapPageRender heatmapPoints={heatmapPoints}/>
+    return <MapPageRender heatmapPoints={heatmapPoints} locale={resolvedParams.lang}/>
 }

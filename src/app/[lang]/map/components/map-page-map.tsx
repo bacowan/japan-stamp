@@ -5,7 +5,9 @@ import { Map } from "leaflet";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
-import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
+import MapPagePopup from "./map-page-popup";
+import { SupportedLocale } from "@/localization/localization";
 
 function MapLoadingComponent() {
     return <div className="w-full h-full flex justify-center items-center">
@@ -51,7 +53,8 @@ interface StampPageMapProps {
     initialMapViewValues: MapViewValues,
     onMapViewChanged: (e: MapViewValues) => void,
     stamps: StampDto[],
-    heatmapPoints: { lat: number, lon: number, weight: number }[]
+    heatmapPoints: { lat: number, lon: number, weight: number }[],
+    locale: SupportedLocale
 }
 
 export interface MapViewValues {
@@ -61,7 +64,7 @@ export interface MapViewValues {
 
 const zoomCutoff = parseInt(process.env.NEXT_PUBLIC_MAP_ZOOM_DETAIL_CUTOFF ?? "");
 
-export default function MapPageMap({ initialMapViewValues, onMapViewChanged, stamps, heatmapPoints }: StampPageMapProps) {
+export default function MapPageMap({ initialMapViewValues, onMapViewChanged, stamps, heatmapPoints, locale }: StampPageMapProps) {
     const [zoom, setZoom] = useState(initialMapViewValues.zoom);
 
     function onMapViewChangedInner(e: MapViewValues) {
@@ -69,10 +72,17 @@ export default function MapPageMap({ initialMapViewValues, onMapViewChanged, sta
         onMapViewChanged(e);
     }
 
-    const stampMarkers = stamps.map(s => <Marker key={s.id} position={[s.lat, s.lon]}/>);
+    const stampMarkers = stamps.map(s =>
+        <Marker key={s.id} position={[s.lat, s.lon]}>
+            <Popup>
+                <MapPagePopup stamp={s} locale={locale}/>
+            </Popup>
+        </Marker>);
 
     return (<div className="w-full h-full p-2 flex flex-col items-center">
-        <MapContainer center={[initialMapViewValues.center.lat, initialMapViewValues.center.lon]} zoom={initialMapViewValues.zoom} scrollWheelZoom={false}
+        <MapContainer
+            center={[initialMapViewValues.center.lat, initialMapViewValues.center.lon]}
+            zoom={initialMapViewValues.zoom}
             className="w-full h-full">
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

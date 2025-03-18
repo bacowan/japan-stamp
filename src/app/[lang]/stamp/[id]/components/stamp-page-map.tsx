@@ -7,7 +7,7 @@ interface StampPageMapProps {
 
 export default function StampPageMap({ stamp }: StampPageMapProps) {
     return (<div className="w-full p-2 flex flex-col items-center">
-        <MapContainer center={[stamp.lat, stamp.lon]} zoom={13} scrollWheelZoom={false}
+        <MapContainer center={[stamp.lat, stamp.lon]} zoom={13}
             className="w-full max-w-2xl aspect-square">
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

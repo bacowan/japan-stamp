@@ -8,6 +8,7 @@ import { useMapEvent } from "react-leaflet";
 import { MapViewValues } from "./components/map-page-map";
 import StampDto from "@/database/dtos/stampDto";
 import GetStampsForLatLonSquare from "./functions/getMarkers";
+import { SupportedLocale } from "@/localization/localization";
 
 const tokyoLatLon = { lat: 35.6764, lon: 139.6500 };
 
@@ -25,12 +26,13 @@ const DynamicMap = dynamic(
     });
 
 interface MapPageRenderProps {
-    heatmapPoints: { lat: number, lon: number, weight: number }[]
+    heatmapPoints: { lat: number, lon: number, weight: number }[],
+    locale: SupportedLocale
 }
 
 const zoomCutoff = parseInt(process.env.NEXT_PUBLIC_MAP_ZOOM_DETAIL_CUTOFF ?? "");
 
-export default function MapPageRender({ heatmapPoints }: MapPageRenderProps) {
+export default function MapPageRender({ heatmapPoints, locale }: MapPageRenderProps) {
     useLeaflet();
     const [initialMapViewValues, setInitialMapViewValues] = useState<MapViewValues | null>(null);
     const [loadedStampsByLocation, setLoadedStampsByLocation] = useState<{[key: string]: StampDto[]}>({});
@@ -94,6 +96,7 @@ export default function MapPageRender({ heatmapPoints }: MapPageRenderProps) {
             onMapViewChanged={onMapViewValuesChanged}
             stamps={loadedStamps}
             heatmapPoints={heatmapPoints}
+            locale={locale}
             />
     }
 }
