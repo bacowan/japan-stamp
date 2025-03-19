@@ -15,7 +15,8 @@ export default interface Dictionary {
     "footer": {
         "about": string,
         "privacy-policy": string,
-        "github": string
+        "github": string,
+        "privacy-preferences": string
     },
     "stamp-list": {
         "near-you-header": string,
