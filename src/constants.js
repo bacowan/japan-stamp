@@ -1,3 +1,4 @@
 export default {
-    privacyPreferencesKey: "privacy-preferences"
+    privacyPreferencesKey: "privacy-preferences",
+    localStorageUpdatedEventName: "local-storage-updated"
 }

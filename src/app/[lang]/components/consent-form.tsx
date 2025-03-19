@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import localizeHref from "../utils/localize-href";
 import Link from "next/link";
 import constants from "../../../constants";
+import { updateLocalStorage } from "../utils/local-storage-utils";
 
 interface ConsentFormParams {
     locale: SupportedLocale
@@ -31,7 +32,7 @@ export default function ConsentForm({ locale }: ConsentFormParams) {
 
     function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        localStorage.setItem(constants.privacyPreferencesKey, JSON.stringify({
+        updateLocalStorage(constants.privacyPreferencesKey, JSON.stringify({
             use_location_data: useLocationData
         }));
         setShouldModalShow(false);
