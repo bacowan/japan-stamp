@@ -41,7 +41,7 @@ export default function ConsentForm({ locale }: ConsentFormParams) {
     return <>
         {
             shouldModalShow &&
-            <Modal closeModal={() => setShouldModalShow(false)} className="max-w-[50%] max-h-[75%] p-2 overflow-y-auto">
+            <Modal className="max-w-[50%] max-h-[75%] p-2 overflow-y-auto">
                 <form onSubmit={onSubmit}>
                     <h1 className="text-2xl border-b mb-1">Privacy Preferences</h1>
                     <p className="text-justify">ekistamp.com is committed to protecting your privacy and ensuring a safe online experience. You can turn of various privacy related settings here, or at the Privacy Preferences page linked at the bottom of the screen. By using this website you also agree to our <Link href={localizeHref(locale, "/privacy-policy")} prefetch={false}>full privacy policy</Link>.</p>
