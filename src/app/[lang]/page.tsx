@@ -1,13 +1,11 @@
-import { stampListPageFlag, forceJpFlag } from "../../../flags";
+import { stampListPageFlag } from "../../../flags";
 import { StampResultsWithLocation } from "./components/stamp-results-with-location";
-import { StampResults } from "./components/stamp-results";
 import StampDto, { StampMongoToDto } from "@/database/dtos/stampDto";
 import Stamp from "@/database/database_types/stamp";
 import mongodb_client from "@/database/mongodb_client";
 import { Filter, Sort } from "mongodb";
 import parseLatLonUrl from "./utils/parse-lat-lon-url";
 import { getDictionary } from "@/localization/dictionaries";
-import isPermittedCountry from "./utils/is-permitted-country";
 
 interface HomeParams {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>,

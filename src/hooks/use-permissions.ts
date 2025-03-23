@@ -5,12 +5,12 @@ import { useEffect, useState } from "react";
 export default function usePermissions(permissionKey: string) {
     const [hasPermission, setHasPermission] = useState<boolean | null>(null);
 
-    function updatePermission(e: CustomEvent) {
-        const detail = JSON.parse(e.detail);
-        setHasPermission(detail[permissionKey]);
-    }
-
     useEffect(() => {
+        function updatePermission(e: CustomEvent) {
+            const detail = JSON.parse(e.detail);
+            setHasPermission(detail[permissionKey]);
+        }
+
         (async function() {
             if (!await isPermittedCountry()) {
                 setHasPermission(false);
@@ -32,7 +32,7 @@ export default function usePermissions(permissionKey: string) {
         })();
 
         return () => window.removeEventListener(constants.localStorageUpdatedEventName, updatePermission as EventListener);
-    }, [permissionKey, updatePermission]);
+    }, [permissionKey]);
 
     return hasPermission;
 }
