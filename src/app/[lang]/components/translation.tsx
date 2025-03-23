@@ -26,6 +26,6 @@ export default function Translation({ text }: TranslationParams) {
         return text.map((t, i) => <TranslationNode key={i} text={t}/>);
     }
     else {
-        return <TranslationNode text={text}/>
+        return <TranslationNode text={text as TranslatableTextItem}/>
     }
 }

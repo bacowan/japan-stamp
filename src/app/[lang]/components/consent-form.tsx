@@ -1,10 +1,7 @@
 'use client'
 
-import { SupportedLocale } from "@/localization/localization";
 import Modal from "./modal";
 import { useEffect, useState } from "react";
-import localizeHref from "../utils/localize-href";
-import Link from "next/link";
 import constants from "../../../constants";
 import { updateLocalStorage } from "../utils/local-storage-utils";
 import Translation from "./translation";

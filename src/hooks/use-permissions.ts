@@ -23,7 +23,7 @@ export default function usePermissions(permissionKey: string) {
 
         window.addEventListener(constants.localStorageUpdatedEventName, updatePermission as EventListener);
         return () => window.removeEventListener(constants.localStorageUpdatedEventName, updatePermission as EventListener);
-    }, []);
+    }, [permissionKey, updatePermission]);
 
     return hasPermission;
 }

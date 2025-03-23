@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { StampResults } from "./stamp-results";
 import Dictionary from "@/localization/dictionaries/dictionary";
 import { SupportedLocale } from "@/localization/localization";
-import constants from "@/constants";
 import usePermissions from "@/hooks/use-permissions";
 
 interface StampResultsWithLocationParams {
