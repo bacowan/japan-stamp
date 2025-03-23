@@ -8,7 +8,7 @@ import { VercelToolbar } from "@vercel/toolbar/next";
 import { Suspense } from "react";
 import Loading from "./loading";
 import { mapPageFlag } from "../../../flags";
-import ConsentForm from "./components/consent-form";
+import ConsentModal from "./components/consent-modal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,7 +49,7 @@ export default async function RootLayout({
           </Suspense>
         </div>
         {shouldInjectToolbar && <VercelToolbar />}
-        <ConsentForm dictionary={dictionary["privacy-preferences"]}/>
+        <ConsentModal dictionary={dictionary["privacy-preferences"]}/>
         <Footer dictionary={dictionary["footer"]} locale={resolvedParams.lang}/>
       </body>
     </html>
