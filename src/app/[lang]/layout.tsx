@@ -49,7 +49,7 @@ export default async function RootLayout({
           </Suspense>
         </div>
         {shouldInjectToolbar && <VercelToolbar />}
-        <ConsentForm locale={resolvedParams.lang}/>
+        <ConsentForm dictionary={dictionary["privacy-preferences"]}/>
         <Footer dictionary={dictionary["footer"]} locale={resolvedParams.lang}/>
       </body>
     </html>

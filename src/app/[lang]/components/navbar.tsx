@@ -9,6 +9,7 @@ import localizeHref from "../utils/localize-href";
 import { LuMenu } from "react-icons/lu";
 import { useState } from "react";
 import Modal from "./modal";
+import Translation from "./translation";
 
 interface NavbarParams {
     lang: SupportedLocale,
@@ -30,7 +31,7 @@ export default function Navbar({ lang, dictionary, showMapHeader }: NavbarParams
                 className="cursor-pointer whitespace-nowrap p-4 w-full"
                 href={`/${l.lang}${pathname.slice(lang.length + 1)}?${searchParams.toString()}`}
                 prefetch={false}>
-                    {l.name}
+                    <Translation text={l.name}/>
             </Link>
         </li>);
 
