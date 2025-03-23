@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { StampResults } from "./stamp-results";
 import Dictionary from "@/localization/dictionaries/dictionary";
 import { SupportedLocale } from "@/localization/localization";
-import usePermissions from "@/hooks/use-permissions";
 
 interface StampResultsWithLocationParams {
     stamps: StampDto[],
@@ -13,13 +12,11 @@ interface StampResultsWithLocationParams {
     locale: SupportedLocale
 }
 
-// TODO: combine with StampResults. They were separated to work with country permissions, but that has been delegated to usePermissions.
 export function StampResultsWithLocation({ stamps, dictionary, locale }: StampResultsWithLocationParams) {
     const [userLocation, setUserLocation] = useState<{lat: number, lon: number} | null>(null);
-    const hasLocationPermissions = usePermissions("use_location_data");
 
     useEffect(() => {
-        if (hasLocationPermissions === true && "geolocation" in navigator) {
+        if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(pos => {
                 const coords = pos.coords;
                 setUserLocation({
@@ -27,8 +24,10 @@ export function StampResultsWithLocation({ stamps, dictionary, locale }: StampRe
                     lon: coords.longitude
                 });
             });
+        } else {
+            /* geolocation IS NOT available */
         }
-    }, [hasLocationPermissions]);
+    }, []);
 
     return <StampResults stamps={stamps} userLocation={userLocation ?? undefined} dictionary={dictionary} locale={locale}/>
 }
