@@ -7,10 +7,11 @@ import Dictionary from "@/localization/dictionaries/dictionary";
 import ConsentForm from "./consent-form";
 
 interface ConsentModalParams {
-    dictionary: Dictionary["privacy-preferences"]
+    dictionary: Dictionary["privacy-preferences"],
+    isPermittedCountry: boolean
 }
 
-export default function ConsentModal({ dictionary }: ConsentModalParams) {
+export default function ConsentModal({ dictionary, isPermittedCountry }: ConsentModalParams) {
     const [shouldModalShow, setShouldModalShow] = useState(false);
     
     useEffect(() => {
@@ -27,7 +28,7 @@ export default function ConsentModal({ dictionary }: ConsentModalParams) {
         {
             shouldModalShow &&
             <Modal className="max-w-[50%] max-h-[75%] p-2 overflow-y-auto">
-                <ConsentForm dictionary={dictionary} onSubmit={onSubmit}/>
+                <ConsentForm dictionary={dictionary} onSubmit={onSubmit} isPermittedCountry={isPermittedCountry}/>
             </Modal>
         }
     </>

@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import Loading from "./loading";
 import { mapPageFlag } from "../../../flags";
 import ConsentModal from "./components/consent-modal";
+import isPermittedCountry from "./utils/is-permitted-country";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,7 +50,7 @@ export default async function RootLayout({
           </Suspense>
         </div>
         {shouldInjectToolbar && <VercelToolbar />}
-        <ConsentModal dictionary={dictionary["privacy-preferences"]}/>
+        <ConsentModal dictionary={dictionary["privacy-preferences"]} isPermittedCountry={await isPermittedCountry()}/>
         <Footer dictionary={dictionary["footer"]} locale={resolvedParams.lang}/>
       </body>
     </html>

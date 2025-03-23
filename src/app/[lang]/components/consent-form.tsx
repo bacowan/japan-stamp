@@ -13,10 +13,11 @@ interface PermissionsFlags {
 
 interface ConsentFormParams {
     dictionary: Dictionary["privacy-preferences"],
-    onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
+    onSubmit: (e: React.FormEvent<HTMLFormElement>) => void,
+    isPermittedCountry: boolean
 }
 
-export default function ConsentForm({ dictionary, onSubmit }: ConsentFormParams) {
+export default function ConsentForm({ dictionary, onSubmit, isPermittedCountry }: ConsentFormParams) {
     const [permissions, setPermissions] = useState<PermissionsFlags | null>(null);
 
     useEffect(() => {
@@ -32,7 +33,7 @@ export default function ConsentForm({ dictionary, onSubmit }: ConsentFormParams)
     function setPermission(permission: keyof PermissionsFlags, value: boolean) {
         setPermissions(p => ({
             ...p,
-            [permission]: value
+            [permission]: isPermittedCountry && value
         }));
     }
 
@@ -58,6 +59,8 @@ export default function ConsentForm({ dictionary, onSubmit }: ConsentFormParams)
         }
     }
 
+    const greyOutClass = isPermittedCountry ? "" : "opacity-[0.5]";
+
     return <>
         {
             permissions === null ?
@@ -73,12 +76,12 @@ export default function ConsentForm({ dictionary, onSubmit }: ConsentFormParams)
                         <li className="ml-6"><Translation text={dictionary["required-storage-list-1"]}/></li>
                     </ul>
                     <h2 className="text-xl mt-4 mb-1"><Translation text={dictionary["location-data"]}/></h2>
-                    <label><input type="checkbox" checked={permissions.locationData} onChange={e => setPermission("locationData", e.target.checked)}/> <Translation text={dictionary["opt-in"]}/></label>
+                    <label className={greyOutClass}><input type="checkbox" checked={permissions.locationData} onChange={e => setPermission("locationData", e.target.checked)}/> <Translation text={dictionary["opt-in"]}/></label>
                     <p className="text-justify"><Translation text={dictionary["location-data-body"]}/></p>
                     <div className="border-t mt-4 w-full flex flex-row justify-around">
-                        <button className="m-2 p-2 border rounded-sm" type="button" onClick={onAllowAllClicked}><Translation text={dictionary["allow-all"]}/></button>
-                        <button className="m-2 p-2 border rounded-sm" type="button" onClick={onAllowOnlyNessisaryClicked}><Translation text={dictionary["allow-nessisary-only"]}/></button>
-                        <button className="m-2 p-2 border rounded-sm" type="submit"><Translation text={dictionary["confirm"]}/></button>
+                        <button className={`m-2 p-2 border rounded-sm ${greyOutClass}`} type="button" onClick={onAllowAllClicked} disabled={!isPermittedCountry}><Translation text={dictionary["allow-all"]}/></button>
+                        <button className={`m-2 p-2 border rounded-sm ${greyOutClass}`} type="button" onClick={onAllowOnlyNessisaryClicked} disabled={!isPermittedCountry}><Translation text={dictionary["allow-nessisary-only"]}/></button>
+                        <button className={`m-2 p-2 border rounded-sm ${greyOutClass}`} type="submit" disabled={!isPermittedCountry}><Translation text={dictionary["confirm"]}/></button>
                     </div>
                 </form>
         }
