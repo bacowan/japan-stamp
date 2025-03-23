@@ -7,7 +7,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import parseLatLonUrl from "../utils/parse-lat-lon-url";
 import Dictionary from "@/localization/dictionaries/dictionary";
 import { SupportedLocale } from "@/localization/localization";
-import Translation from "./translation";
 
 interface StampResultsParams {
     stamps: StampDto[],
@@ -49,20 +48,12 @@ export function StampResults({ stamps, userLocation, dictionary, locale }: Stamp
 
   return <>
     <div className="w-full flex flex-col items-center">
-      <h2 className="text-xl">
-          <Translation text={dictionary["near-you-header"]}/>
-        </h2>
+      <h2 className="text-xl">{dictionary["near-you-header"]}</h2>
       <label>
-      <Translation text={dictionary["sort-by"]}/>
+        {dictionary["sort-by"]}
         <select className="ml-1 text-black border" value={selectedSortOption} onChange={onSortOptionChanged}>
-          <option value="date">
-          <Translation text={dictionary["date-added-sort"]}/>
-          </option>
-          {
-            userLocation !== undefined &&
-            <option value="nearby">
-              <Translation text={dictionary["nearby-sort"]}/>
-            </option> }
+          <option value="date">{dictionary["date-added-sort"]}</option>
+          { userLocation !== undefined && <option value="nearby">{dictionary["nearby-sort"]}</option> }
         </select>
       </label>
     </div>

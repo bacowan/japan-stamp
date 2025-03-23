@@ -1,6 +1,5 @@
 import { SupportedLocale } from "@/localization/localization";
-import { Url } from "next/dist/shared/lib/router/router";
 
-export default function localizeHref(locale: SupportedLocale, href: Url) {
+export default function localizeHref(locale: SupportedLocale, href: string) {
     return `/${locale}${href}`;
 }
