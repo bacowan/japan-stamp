@@ -13,6 +13,7 @@ interface StampResultsWithLocationParams {
     locale: SupportedLocale
 }
 
+// TODO: combine with StampResults. They were separated to work with country permissions, but that has been delegated to usePermissions.
 export function StampResultsWithLocation({ stamps, dictionary, locale }: StampResultsWithLocationParams) {
     const [userLocation, setUserLocation] = useState<{lat: number, lon: number} | null>(null);
     const hasLocationPermissions = usePermissions("use_location_data");

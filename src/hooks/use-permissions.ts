@@ -1,3 +1,4 @@
+import isPermittedCountry from "@/app/[lang]/utils/is-permitted-country";
 import constants from "@/constants";
 import { useEffect, useState } from "react";
 
@@ -10,18 +11,26 @@ export default function usePermissions(permissionKey: string) {
     }
 
     useEffect(() => {
-        const privacyPreferences = localStorage.getItem(constants.privacyPreferencesKey);
-        if (privacyPreferences) {
-            const json = JSON.parse(privacyPreferences);
-            if (json[permissionKey] === true) {
-                setHasPermission(true);
-            }
-            else {
+        (async function() {
+            if (!await isPermittedCountry()) {
                 setHasPermission(false);
+                return;
             }
-        }
 
-        window.addEventListener(constants.localStorageUpdatedEventName, updatePermission as EventListener);
+            const privacyPreferences = localStorage.getItem(constants.privacyPreferencesKey);
+            if (privacyPreferences) {
+                const json = JSON.parse(privacyPreferences);
+                if (json[permissionKey] === true) {
+                    setHasPermission(true);
+                }
+                else {
+                    setHasPermission(false);
+                }
+            }
+    
+            window.addEventListener(constants.localStorageUpdatedEventName, updatePermission as EventListener);
+        })();
+
         return () => window.removeEventListener(constants.localStorageUpdatedEventName, updatePermission as EventListener);
     }, [permissionKey, updatePermission]);
 
