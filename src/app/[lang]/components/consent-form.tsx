@@ -28,6 +28,11 @@ export default function ConsentForm({ dictionary, onSubmit, isPermittedCountry }
                 locationData: json["use_location_data"] === true
             });
         }
+        else {
+            setPermissions({
+                locationData: false
+            })
+        }
     }, []);
 
     function setPermission(permission: keyof PermissionsFlags, value: boolean) {
