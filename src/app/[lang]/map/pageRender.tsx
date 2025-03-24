@@ -8,6 +8,7 @@ import { MapViewValues } from "./components/map-page-map";
 import StampDto from "@/database/dtos/stampDto";
 import GetStampsForLatLonSquare from "./functions/getMarkers";
 import { SupportedLocale } from "@/localization/localization";
+import usePermissions from "@/hooks/use-permissions";
 
 const tokyoLatLon = { lat: 35.6764, lon: 139.6500 };
 
@@ -33,6 +34,8 @@ const zoomCutoff = parseInt(process.env.NEXT_PUBLIC_MAP_ZOOM_DETAIL_CUTOFF ?? ""
 
 export default function MapPageRender({ heatmapPoints, locale }: MapPageRenderProps) {
     useLeaflet();
+    const hasLocationPermissions = usePermissions("use_location_data");
+    
     const [initialMapViewValues, setInitialMapViewValues] = useState<MapViewValues | null>(null);
     const [loadedStampsByLocation, setLoadedStampsByLocation] = useState<{[key: string]: StampDto[]}>({});
     const loadingStampsByLocation = useRef<{[key: string]: Promise<StampDto[]>}>({});
@@ -76,15 +79,16 @@ export default function MapPageRender({ heatmapPoints, locale }: MapPageRenderPr
     }
 
     useEffect(() => {
-        if ("geolocation" in navigator) {
+        if (hasLocationPermissions === false || !("geolocation" in navigator)) {
+            onGetCurrentPositionError();
+        }
+        else if (hasLocationPermissions === true) {
             navigator.geolocation.getCurrentPosition(
                 onGetCurrentPositionSuccess,
                 onGetCurrentPositionError
             );
-        } else {
-            /* geolocation IS NOT available */
         }
-    }, []);
+    }, [hasLocationPermissions]);
 
     if (initialMapViewValues === null) {
         return <MapLoadingComponent/>

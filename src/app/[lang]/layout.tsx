@@ -8,6 +8,8 @@ import { VercelToolbar } from "@vercel/toolbar/next";
 import { Suspense } from "react";
 import Loading from "./loading";
 import { mapPageFlag } from "../../../flags";
+import ConsentModal from "./components/consent-modal";
+import isPermittedCountry from "./utils/is-permitted-country";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,13 +43,14 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased
           bg-background text-text dark:bg-darkBackground dark:text-darkText
           h-full flex flex-col`}>
-        <Navbar lang={(await params).lang} dictionary={{ ...dictionary["navbar"], ...dictionary["common"] }} showMapHeader={showMap}/>
+        <Navbar lang={resolvedParams.lang} dictionary={{ ...dictionary["navbar"], ...dictionary["common"] }} showMapHeader={showMap}/>
         <div className="grow">
           <Suspense fallback={<Loading/>}>
               {children}
           </Suspense>
         </div>
         {shouldInjectToolbar && <VercelToolbar />}
+        <ConsentModal dictionary={dictionary["privacy-preferences"]} isPermittedCountry={await isPermittedCountry()}/>
         <Footer dictionary={dictionary["footer"]} locale={resolvedParams.lang}/>
       </body>
     </html>
