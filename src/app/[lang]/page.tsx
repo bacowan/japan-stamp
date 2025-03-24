@@ -1,7 +1,5 @@
-import { stampListPageFlag, forceJpFlag } from "../../../flags";
-import { headers } from "next/headers";
+import { stampListPageFlag } from "../../../flags";
 import { StampResultsWithLocation } from "./components/stamp-results-with-location";
-import { StampResults } from "./components/stamp-results";
 import StampDto, { StampMongoToDto } from "@/database/dtos/stampDto";
 import Stamp from "@/database/database_types/stamp";
 import mongodb_client from "@/database/mongodb_client";
@@ -74,13 +72,6 @@ export default async function Home({ searchParams, params }: Readonly<HomeParams
     .toArray();
   const stampCards = stampsArray
     .map<StampDto>(s => StampMongoToDto(s));
-  
-  const country = (await headers()).get('x-country') || 'unknown';
 
-  if (country === 'JP' || await forceJpFlag()) {
-    return <StampResultsWithLocation stamps={stampCards} dictionary={dictionary["stamp-list"]} locale={resolvedParams.lang}/>
-  }
-  else {
-    return <StampResults stamps={stampCards} dictionary={dictionary["stamp-list"]} locale={resolvedParams.lang}/>
-  }
+  return <StampResultsWithLocation stamps={stampCards} dictionary={dictionary["stamp-list"]} locale={resolvedParams.lang}/>
 }
