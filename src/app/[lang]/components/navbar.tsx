@@ -44,7 +44,7 @@ export default function Navbar({ lang, dictionary, showMapHeader }: NavbarParams
     }
 
     return <>
-        <ul className="border-b border-border text-primary flex flex-col sm:flex-row">
+        <ul className="border-b-2 border-border text-primary flex flex-col sm:flex-row bg-navbars">
             <Link href={localizeHref(lang, "/")} className="flex flex-row items-center pr-3 pl-3 h-10 hover:bg-backgroundHover hover:dark:bg-darkBackgroundHover" prefetch={false}>
                 ekistamp.net
             </Link>

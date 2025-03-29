@@ -41,7 +41,7 @@ export default async function RootLayout({
     <html lang="en" className="h-screen">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased
-          bg-background text-text dark:bg-darkBackground dark:text-darkText
+          bg-background text-text
           h-full flex flex-col`}>
         <Navbar lang={resolvedParams.lang} dictionary={{ ...dictionary["navbar"], ...dictionary["common"] }} showMapHeader={showMap}/>
         <div className="grow">
