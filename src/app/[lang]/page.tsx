@@ -1,11 +1,11 @@
 import { stampListPageFlag } from "../../../flags";
-import { StampResultsWithLocation } from "./components/stamp-results-with-location";
 import StampDto, { StampMongoToDto } from "@/database/dtos/stampDto";
 import Stamp from "@/database/database_types/stamp";
 import mongodb_client from "@/database/mongodb_client";
 import { Filter, Sort } from "mongodb";
 import parseLatLonUrl from "./utils/parse-lat-lon-url";
 import { getDictionary } from "@/localization/dictionaries";
+import { StampResults } from "./components/stamp-results";
 
 interface HomeParams {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>,
@@ -73,5 +73,5 @@ export default async function Home({ searchParams, params }: Readonly<HomeParams
   const stampCards = stampsArray
     .map<StampDto>(s => StampMongoToDto(s));
 
-  return <StampResultsWithLocation stamps={stampCards} dictionary={dictionary["stamp-list"]} locale={resolvedParams.lang}/>
+  return <StampResults stamps={stampCards} dictionary={dictionary["stamp-list"]} locale={resolvedParams.lang}/>
 }
