@@ -6,6 +6,7 @@ import { Filter, Sort } from "mongodb";
 import parseLatLonUrl from "./utils/parse-lat-lon-url";
 import { getDictionary } from "@/localization/dictionaries";
 import { StampResults } from "./components/stamp-results";
+import { cookies } from 'next/headers'
 
 interface HomeParams {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>,
@@ -52,14 +53,20 @@ export default async function Home({ searchParams, params }: Readonly<HomeParams
   if (sort === null || sort === "date") {
     sortObj.date = 1;
   }
-  else {
-    const latLon = parseLatLonUrl(sort);
-    if (latLon) {
-      findObj.location = {
-        $near: {
-          $geometry: { type: "Point",  coordinates: [ latLon.lon, latLon.lat ] }
-        }
-      };
+  else if (sort === "nearby") {
+    const cookieStore = await cookies();
+    const latStr = cookieStore.get("lat");
+    const lonStr = cookieStore.get("lon");
+    if (latStr !== undefined && lonStr !== undefined) {
+      const lat = parseFloat(latStr.value);
+      const lon = parseFloat(lonStr.value);
+      if (!isNaN(lat) && !isNaN(lon)) {
+        findObj.location = {
+          $near: {
+            $geometry: { type: "Point",  coordinates: [ lon, lat ] }
+          }
+        };
+      }
     }
   }
   

@@ -28,7 +28,9 @@ export function StampResults({ stamps, dictionary, locale }: StampResultsParams)
       params.set("sort", "date");
     }
     else if (e.target.value === "nearby" && userLocation) {
-      params.set("sort", `${userLocation.lon},${userLocation.lat}`);
+      document.cookie = `lat=${userLocation.lat}`;
+      document.cookie = `lon=${userLocation.lon}`;
+      params.set("sort", "nearby");
     }
     else {
       return;
@@ -39,10 +41,7 @@ export function StampResults({ stamps, dictionary, locale }: StampResultsParams)
 
   let selectedSortOption: "date" | "nearby";
   const sortSearchParam = searchParams.get("sort");
-  if (sortSearchParam === null || sortSearchParam === "date") {
-    selectedSortOption = "date";
-  }
-  else if (parseLatLonUrl(sortSearchParam)) {
+  if (sortSearchParam === "nearby") {
     selectedSortOption = "nearby";
   }
   else {
