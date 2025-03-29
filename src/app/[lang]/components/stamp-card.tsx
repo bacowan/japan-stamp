@@ -11,7 +11,7 @@ import getLocalizedText from '../utils/get-localized-text';
 
 export interface StampCardParams {
     stamp: StampDto,
-    userLocation?: { lat: number, lon: number };
+    userLocation: { lat: number, lon: number } | null;
     locale: SupportedLocale
 }
 

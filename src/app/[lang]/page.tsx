@@ -1,11 +1,11 @@
 import { stampListPageFlag } from "../../../flags";
-import { StampResultsWithLocation } from "./components/stamp-results-with-location";
 import StampDto, { StampMongoToDto } from "@/database/dtos/stampDto";
 import Stamp from "@/database/database_types/stamp";
 import mongodb_client from "@/database/mongodb_client";
 import { Filter, Sort } from "mongodb";
-import parseLatLonUrl from "./utils/parse-lat-lon-url";
 import { getDictionary } from "@/localization/dictionaries";
+import { StampResults } from "./components/stamp-results";
+import { cookies } from 'next/headers'
 
 interface HomeParams {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>,
@@ -52,14 +52,20 @@ export default async function Home({ searchParams, params }: Readonly<HomeParams
   if (sort === null || sort === "date") {
     sortObj.date = 1;
   }
-  else {
-    const latLon = parseLatLonUrl(sort);
-    if (latLon) {
-      findObj.location = {
-        $near: {
-          $geometry: { type: "Point",  coordinates: [ latLon.lon, latLon.lat ] }
-        }
-      };
+  else if (sort === "nearby") {
+    const cookieStore = await cookies();
+    const latStr = cookieStore.get("lat");
+    const lonStr = cookieStore.get("lon");
+    if (latStr !== undefined && lonStr !== undefined) {
+      const lat = parseFloat(latStr.value);
+      const lon = parseFloat(lonStr.value);
+      if (!isNaN(lat) && !isNaN(lon)) {
+        findObj.location = {
+          $near: {
+            $geometry: { type: "Point",  coordinates: [ lon, lat ] }
+          }
+        };
+      }
     }
   }
   
@@ -73,5 +79,5 @@ export default async function Home({ searchParams, params }: Readonly<HomeParams
   const stampCards = stampsArray
     .map<StampDto>(s => StampMongoToDto(s));
 
-  return <StampResultsWithLocation stamps={stampCards} dictionary={dictionary["stamp-list"]} locale={resolvedParams.lang}/>
+  return <StampResults stamps={stampCards} dictionary={dictionary["stamp-list"]} locale={resolvedParams.lang}/>
 }

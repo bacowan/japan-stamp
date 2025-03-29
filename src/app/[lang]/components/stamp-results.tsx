@@ -2,21 +2,22 @@
 
 import StampDto from "@/database/dtos/stampDto";
 import StampCard from "./stamp-card";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import parseLatLonUrl from "../utils/parse-lat-lon-url";
 import Dictionary from "@/localization/dictionaries/dictionary";
 import { SupportedLocale } from "@/localization/localization";
 import Translation from "./translation";
+import usePermissions from "@/hooks/use-permissions";
 
 interface StampResultsParams {
     stamps: StampDto[],
-    userLocation?: { lat: number, lon: number },
     dictionary: Dictionary["stamp-list"],
     locale: SupportedLocale
 }
 
-export function StampResults({ stamps, userLocation, dictionary, locale }: StampResultsParams) {
+export function StampResults({ stamps, dictionary, locale }: StampResultsParams) {
+  const [userLocation, setUserLocation] = useState<{lat: number, lon: number} | null>(null);
+  const hasLocationPermissions = usePermissions("use_location_data");
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -26,7 +27,9 @@ export function StampResults({ stamps, userLocation, dictionary, locale }: Stamp
       params.set("sort", "date");
     }
     else if (e.target.value === "nearby" && userLocation) {
-      params.set("sort", `${userLocation.lon},${userLocation.lat}`);
+      document.cookie = `lat=${userLocation.lat}`;
+      document.cookie = `lon=${userLocation.lon}`;
+      params.set("sort", "nearby");
     }
     else {
       return;
@@ -37,15 +40,24 @@ export function StampResults({ stamps, userLocation, dictionary, locale }: Stamp
 
   let selectedSortOption: "date" | "nearby";
   const sortSearchParam = searchParams.get("sort");
-  if (sortSearchParam === null || sortSearchParam === "date") {
-    selectedSortOption = "date";
-  }
-  else if (parseLatLonUrl(sortSearchParam)) {
+  if (sortSearchParam === "nearby") {
     selectedSortOption = "nearby";
   }
   else {
     selectedSortOption = "date";
   }
+  
+  useEffect(() => {
+      if (hasLocationPermissions === true && "geolocation" in navigator) {
+          navigator.geolocation.getCurrentPosition(pos => {
+              const coords = pos.coords;
+              setUserLocation({
+                  lat: coords.latitude,
+                  lon: coords.longitude
+              });
+          });
+      }
+  }, [hasLocationPermissions]);
 
   return <>
     <div className="w-full flex flex-col items-center">
@@ -56,13 +68,14 @@ export function StampResults({ stamps, userLocation, dictionary, locale }: Stamp
       <Translation text={dictionary["sort-by"]}/>
         <select className="ml-1 text-black border" value={selectedSortOption} onChange={onSortOptionChanged}>
           <option value="date">
-          <Translation text={dictionary["date-added-sort"]}/>
+            <Translation text={dictionary["date-added-sort"]}/>
           </option>
           {
             userLocation !== undefined &&
             <option value="nearby">
               <Translation text={dictionary["nearby-sort"]}/>
-            </option> }
+            </option>
+          }
         </select>
       </label>
     </div>
