@@ -36,7 +36,7 @@ export default function StampCard({ stamp, userLocation, locale }: StampCardPara
         distanceElement = <p>{readableDistance(distance)}</p>
     }
 
-    return <Link className="border rounded-lg m-3 flex flex-row" href={localizeHref(locale, "/stamp/" + stamp.id)} prefetch={false}>
+    return <Link className="rounded-lg m-3 flex flex-row border-border bg-forground shadow-lg hover:scale-105 duration-150" href={localizeHref(locale, "/stamp/" + stamp.id)} prefetch={false}>
         <Image src={stamp.image_url}
             alt="Stamp image"
             width={150} height={150}

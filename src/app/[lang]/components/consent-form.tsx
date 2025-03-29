@@ -84,9 +84,9 @@ export default function ConsentForm({ dictionary, onSubmit, isPermittedCountry }
                     <label className={greyOutClass}><input type="checkbox" checked={permissions.locationData} onChange={e => setPermission("locationData", e.target.checked)}/> <Translation text={dictionary["opt-in"]}/></label>
                     <p className="text-justify"><Translation text={dictionary["location-data-body"]}/></p>
                     <div className="border-t mt-4 w-full flex flex-row justify-around">
-                        <button className={`m-2 p-2 border rounded-sm ${greyOutClass}`} type="button" onClick={onAllowAllClicked} disabled={!isPermittedCountry}><Translation text={dictionary["allow-all"]}/></button>
-                        <button className={`m-2 p-2 border rounded-sm ${greyOutClass}`} type="button" onClick={onAllowOnlyNessisaryClicked} disabled={!isPermittedCountry}><Translation text={dictionary["allow-nessisary-only"]}/></button>
-                        <button className={`m-2 p-2 border rounded-sm ${greyOutClass}`} type="submit" disabled={!isPermittedCountry}><Translation text={dictionary["confirm"]}/></button>
+                        <button className={`m-2 p-2 shadow-lg hover:scale-105 duration-150 border rounded-sm bg-forground ${greyOutClass}`} type="button" onClick={onAllowAllClicked} disabled={!isPermittedCountry}><Translation text={dictionary["allow-all"]}/></button>
+                        <button className={`m-2 p-2 shadow-lg hover:scale-105 duration-150 border rounded-sm bg-forground ${greyOutClass}`} type="button" onClick={onAllowOnlyNessisaryClicked} disabled={!isPermittedCountry}><Translation text={dictionary["allow-nessisary-only"]}/></button>
+                        <button className={`m-2 p-2 shadow-lg hover:scale-105 duration-150 border rounded-sm bg-forground  ${greyOutClass}`} type="submit" disabled={!isPermittedCountry}><Translation text={dictionary["confirm"]}/></button>
                     </div>
                 </form>
         }
