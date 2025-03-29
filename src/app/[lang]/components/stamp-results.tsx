@@ -71,7 +71,7 @@ export function StampResults({ stamps, dictionary, locale }: StampResultsParams)
             <Translation text={dictionary["date-added-sort"]}/>
           </option>
           {
-            userLocation !== undefined &&
+            userLocation !== null &&
             <option value="nearby">
               <Translation text={dictionary["nearby-sort"]}/>
             </option>
