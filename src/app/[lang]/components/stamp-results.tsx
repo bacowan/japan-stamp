@@ -56,13 +56,14 @@ export function StampResults({ stamps, userLocation, dictionary, locale }: Stamp
       <Translation text={dictionary["sort-by"]}/>
         <select className="ml-1 text-black border" value={selectedSortOption} onChange={onSortOptionChanged}>
           <option value="date">
-          <Translation text={dictionary["date-added-sort"]}/>
+            <Translation text={dictionary["date-added-sort"]}/>
           </option>
           {
             userLocation !== undefined &&
             <option value="nearby">
               <Translation text={dictionary["nearby-sort"]}/>
-            </option> }
+            </option>
+          }
         </select>
       </label>
     </div>
