@@ -4,7 +4,6 @@ import StampDto from "@/database/dtos/stampDto";
 import StampCard from "./stamp-card";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import parseLatLonUrl from "../utils/parse-lat-lon-url";
 import Dictionary from "@/localization/dictionaries/dictionary";
 import { SupportedLocale } from "@/localization/localization";
 import Translation from "./translation";
