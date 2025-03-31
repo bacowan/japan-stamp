@@ -20,7 +20,7 @@ function setCountry(request: NextRequestWithGeo, response: NextResponse) {
 
 function getLocale(request: NextRequestWithGeo) {
   const languages = new Negotiator({ headers: {
-    'accept-language': request.headers.get("accept-language") ?? undefined
+    'accept-language': request.headers.get("accept-language") ?? ""
   }}).languages();
   const defaultLocale = 'en-US'
    

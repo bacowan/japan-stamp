@@ -27,7 +27,7 @@ export default function ConsentModal({ dictionary, isPermittedCountry }: Consent
     return <>
         {
             shouldModalShow &&
-            <Modal className="max-w-[50%] max-h-[75%] p-2 overflow-y-auto">
+            <Modal className="max-w-[50%] max-h-[75%] p-2 overflow-y-auto" dataCy="consent-modal">
                 <ConsentForm dictionary={dictionary} onSubmit={onSubmit} isPermittedCountry={isPermittedCountry}/>
             </Modal>
         }
