@@ -1,22 +1,19 @@
 import { registerCommand } from 'cypress-wait-for-stable-dom'
-import stamps from "../fixtures/stamps.json";
+//import { MongoMemoryServer } from 'mongodb-memory-server';
 registerCommand()
 
 describe('initial page view', () => {
 
-  /*let mongod;
-  before(async () => {
-    mongod = await MongoMemoryServer.create();
-    process.env.MONGODB_URI = mongod.getUri();
-    const db = client.db();
-    await db.collection('Stamps').insertMany(stamps);
+  before(() => {
+    return cy.task('initialize');
   });
 
-  after(async () => {
-    await mongod.stop();
-  });*/
+  after(() => {
+    return cy.task('clean');
+  });
 
   it('should show the privacy preferences dialog when no local storage is set', () => {
+    cy.task('log', "test start");
     cy.visit('http://localhost:3000/');
     cy.get('[data-cy="consent-modal"]');
   });
