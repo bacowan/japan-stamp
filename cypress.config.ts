@@ -16,9 +16,10 @@ export default defineConfig({
           });
           const client = new MongoClient(server.getUri());
           const db = client.db("JapanStamp");
+          await db.dropDatabase();
           const collection = db.collection<Stamp>("Stamps");
-          await collection.insertMany(stamps)
-          console.log('init done')
+          await collection.insertMany(stamps);
+          await collection.createIndex({ "location": "2dsphere" });
           return null;
         },
 
@@ -28,6 +29,9 @@ export default defineConfig({
               port: 27018
             }
           });
+          const client = new MongoClient(server.getUri());
+          const db = client.db("JapanStamp");
+          await db.dropDatabase();
           await server.stop();
           return null;
         },
@@ -38,6 +42,7 @@ export default defineConfig({
         }
       })
     },
-    baseUrl: 'http://localhost:3000'
-  }
+    baseUrl: 'http://localhost:3000',
+    experimentalRunAllSpecs: true
+  },
 });

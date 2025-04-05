@@ -66,7 +66,7 @@ export function StampResults({ stamps, dictionary, locale }: StampResultsParams)
         </h2>
       <label>
       <Translation text={dictionary["sort-by"]}/>
-        <select className="ml-1 text-black border" value={selectedSortOption} onChange={onSortOptionChanged}>
+        <select className="ml-1 text-black border" value={selectedSortOption} onChange={onSortOptionChanged} data-cy="sort-select">
           <option value="date">
             <Translation text={dictionary["date-added-sort"]}/>
           </option>
@@ -79,7 +79,7 @@ export function StampResults({ stamps, dictionary, locale }: StampResultsParams)
         </select>
       </label>
     </div>
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 grow">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 grow" data-cy="stamp-list">
         {stamps.map(s => <StampCard key={s.id} stamp={s} userLocation={userLocation} locale={locale}/>)}
     </div>
   </>

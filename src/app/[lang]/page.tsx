@@ -25,7 +25,6 @@ function firstParam(param: string | string[] | undefined): string {
 }
 
 export default async function Home({ searchParams, params }: Readonly<HomeParams>) {
-  console.log("render start");
   const resolvedParams = await params;
   const dictionary = await getDictionary(resolvedParams.lang);
 
@@ -79,7 +78,6 @@ export default async function Home({ searchParams, params }: Readonly<HomeParams
     .toArray();
   const stampCards = stampsArray
     .map<StampDto>(s => StampMongoToDto(s));
-  console.log("server side component");
 
   return <StampResults stamps={stampCards} dictionary={dictionary["stamp-list"]} locale={resolvedParams.lang}/>
 }
