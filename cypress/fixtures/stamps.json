@@ -1,0 +1,20 @@
+[{
+    "_id": {
+      "$oid": "67bc2897003b5d52e8ff48f6"
+    },
+    "name": {
+      "en-US": "Aaaa",
+      "ja": "会津若松駅"
+    },
+    "description": {
+      "en-US": "Inside the front entrance on the left."
+    },
+    "image_url": "https://secacirgiqusfrjiprci.supabase.co/storage/v1/object/public/StampData//PXL_20250224_115147237_extra_compressed.jpg",
+    "location": [
+      139.9303531179879,
+      37.50781461320631
+    ],
+    "last_updated": {
+      "$date": "2025-03-03T00:00:00.000Z"
+    }
+  }]
